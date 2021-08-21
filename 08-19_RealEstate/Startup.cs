@@ -27,6 +27,7 @@ namespace _08_19_RealEstate
         {
             services.AddControllersWithViews();
             services.AddTransient<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddScoped<GeneralService>();
             services.AddScoped<ApartmentsDbService>();
             services.AddScoped<BrokersDbService>();
             services.AddScoped<CompaniesDbService>();

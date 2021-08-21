@@ -28,5 +28,16 @@ namespace _08_19_RealEstate.Services
 
             return brokers;
         }
+
+        public void AddBroker(Broker broker)
+        {
+            string query = @$"INSERT INTO dbo.Brokers (FirstName, LastName)
+                              VALUES (N'{broker.FirstName}', N'{broker.LastName}');";
+
+            using (_connection)
+            {
+                _connection.Execute(query);
+            }
+        }
     }
 }

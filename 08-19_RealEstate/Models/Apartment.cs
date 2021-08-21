@@ -15,7 +15,7 @@ namespace _08_19_RealEstate.Models
 
         public int TotalFloorsInBuilding { get; set; }
 
-        public int AreaInSqm { get; set; }
+        public decimal AreaInSqm { get; set; }
 
         [Required]
         public int BrokerId { get; set; }

@@ -47,5 +47,19 @@ namespace _08_19_RealEstate.Services
 
             return apartments;
         }
+
+        public void AddApartment(Apartment apartment)
+        {
+            int addressId = _addressesDbService.AddAddressAndGetItsId(apartment.Address);
+
+            string query = $@"INSERT INTO dbo.Apartments (AddressId, Floor, TotalFloorsInBuilding, AreaInSqm, BrokerId, CompanyId)
+                              VALUES ({addressId}, {apartment.Floor}, {apartment.TotalFloorsInBuilding},
+                                    {apartment.AreaInSqm}, {apartment.BrokerId}, {apartment.CompanyId});";
+
+            using (_connection)
+            {
+                _connection.Execute(query);
+            }
+        }
     }
 }

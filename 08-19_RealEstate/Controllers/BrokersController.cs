@@ -1,4 +1,5 @@
-﻿using _08_19_RealEstate.Services;
+﻿using _08_19_RealEstate.Models;
+using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,19 @@ namespace _08_19_RealEstate.Controllers
         public IActionResult Index()
         {
             return View(_dbService.GetBrokers());
+        }
+
+        public IActionResult Create()
+        {
+            return View(new Broker());
+        }
+
+        [HttpPost]
+        public IActionResult Create(Broker newBroker)
+        {
+            _dbService.AddBroker(newBroker);
+
+            return RedirectToAction("Index");
         }
     }
 }
