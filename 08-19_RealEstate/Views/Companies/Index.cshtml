@@ -1,0 +1,35 @@
+﻿@model List<Company>
+@{
+    ViewData["Title"] = "Companies";
+}
+
+<h2 class="d-inline-block mb-4">Companies</h2>
+
+@Html.ActionLink("Add a company", "Create", "Companies", null, new { @class = "btn btn-primary float-right" })
+
+@if (Model.Count == 0)
+{
+    <p>There are no companies.</p>
+}
+else
+{
+    <table id="companies" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center align-middle">Company Name</th>
+                <th class="text-center align-middle">Address</th>
+                <th class="text-center align-middle"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var company in Model)
+            {
+                <tr>
+                    <td class="text-center align-middle">@company.Name</td>
+                    <td class="text-center align-middle">@company.Address.ToString()</td>
+                    <td class="text-center align-middle">@Html.ActionLink("Show brokers", "", "")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

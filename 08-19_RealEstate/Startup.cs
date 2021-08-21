@@ -1,3 +1,4 @@
+using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +26,11 @@ namespace _08_19_RealEstate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddTransient<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddScoped<ApartmentsDbService>();
+            services.AddScoped<BrokersDbService>();
+            services.AddScoped<CompaniesDbService>();
+            services.AddScoped<AddressesDbService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

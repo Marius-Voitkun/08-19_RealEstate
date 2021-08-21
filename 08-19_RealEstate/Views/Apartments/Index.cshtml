@@ -1,0 +1,35 @@
+﻿@model List<Apartment>
+@{
+    ViewData["Title"] = "Apartments";
+}
+
+<h2 class="d-inline-block mb-4">Apartments</h2>
+
+@Html.ActionLink("Add an apartment", "Create", "Apartments", null, new { @class = "btn btn-primary float-right" })
+
+@if (Model.Count == 0)
+{
+    <p>There are no apartments.</p>
+}
+else
+{
+    <table id="apartments" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center align-middle">Apartment Address</th>
+                <th class="text-center align-middle">Company</th>
+                <th class="text-center align-middle">Broker</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var apartment in Model)
+            {
+                <tr>
+                    <td class="text-center align-middle">@apartment.Address.ToString()</td>
+                    <td class="text-center align-middle">@apartment.Company.Name</td>
+                    <td class="text-center align-middle">@apartment.Broker.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
