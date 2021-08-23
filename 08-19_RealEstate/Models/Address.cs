@@ -18,12 +18,13 @@ namespace _08_19_RealEstate.Models
         [StringLength(7)]
         public string HouseNr { get; set; }
 
+        [DisplayFormat(ConvertEmptyStringToNull = true)]  // does not work?
         [StringLength(5)]
         public string FlatNr { get; set; }
 
         public override string ToString()
         {
-            string flat = (FlatNr != null) ? ('/' + FlatNr) : "";
+            string flat = (FlatNr != null && FlatNr != "") ? ('/' + FlatNr) : "";
 
             return $"{Street} {HouseNr}{flat}, {City}";
         }

@@ -37,5 +37,23 @@ namespace _08_19_RealEstate.Services
 
             return companies;
         }
+
+        public int AddCompanyAndGetItsId(Company company)
+        {
+            int addressId = _addressesDbService.AddAddressAndGetItsId(company.Address);
+
+            string query = $@"INSERT INTO dbo.Companies (Name, AddressId)
+                              VALUES (N'{company.Name}', {addressId});
+                              SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            int companyId = 0;
+
+            using (_connection)
+            {
+                companyId = _connection.Query<int>(query).ToList()[0];
+            }
+
+            return companyId;
+        }
     }
 }

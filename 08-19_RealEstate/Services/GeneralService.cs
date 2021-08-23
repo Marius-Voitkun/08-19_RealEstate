@@ -9,13 +9,16 @@ namespace _08_19_RealEstate.Services
         private readonly BrokersDbService _brokersDbService;
         private readonly CompaniesDbService _companiesDbService;
         private readonly AddressesDbService _addressesDbService;
+        private readonly CompaniesBrokersDbService _companiesBrokersDbService;
 
-        public GeneralService(ApartmentsDbService apartmentsDbService, BrokersDbService brokersDbService, CompaniesDbService companiesDbService, AddressesDbService addressesDbService)
+        public GeneralService(ApartmentsDbService apartmentsDbService, BrokersDbService brokersDbService, CompaniesDbService companiesDbService,
+                    AddressesDbService addressesDbService, CompaniesBrokersDbService companiesBrokersDbService)
         {
             _apartmentsDbService = apartmentsDbService;
             _brokersDbService = brokersDbService;
             _companiesDbService = companiesDbService;
             _addressesDbService = addressesDbService;
+            _companiesBrokersDbService = companiesBrokersDbService;
         }
 
         public ApartmentFormViewModel GetModelForApartmentForm()
@@ -28,6 +31,23 @@ namespace _08_19_RealEstate.Services
             };
 
             return model;
+        }
+
+        public CompanyFormViewModel GetModelForCompanyForm()
+        {
+            CompanyFormViewModel model = new()
+            {
+                Company = new() { Address = new() },
+                Brokers = _brokersDbService.GetBrokers()
+            };
+
+            return model;
+        }
+
+        public void AddNewCompanyWithBrokers(CompanyFormViewModel model)
+        {
+            int companyId = _companiesDbService.AddCompanyAndGetItsId(model.Company);
+            _companiesBrokersDbService.AddCompaniesBrokersJunctions(companyId, model.SelectedBrokersIds);
         }
     }
 }

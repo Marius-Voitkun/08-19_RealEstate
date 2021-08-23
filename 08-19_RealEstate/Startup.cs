@@ -32,6 +32,7 @@ namespace _08_19_RealEstate
             services.AddScoped<BrokersDbService>();
             services.AddScoped<CompaniesDbService>();
             services.AddScoped<AddressesDbService>();
+            services.AddScoped<CompaniesBrokersDbService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
