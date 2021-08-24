@@ -49,5 +49,17 @@ namespace _08_19_RealEstate.Services
 
             return addressId;
         }
+
+        public void UpdateAddress(Address address)
+        {
+            string query = $@"UPDATE dbo.Addresses
+                              SET City = N'{address.City}', Street = N'{address.Street}', HouseNr = '{address.HouseNr}', FlatNr = '{address.FlatNr}'
+                              WHERE Id = {address.Id};";
+
+            using (_connection)
+            {
+                _connection.Execute(query);
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using _08_19_RealEstate.Models;
 using _08_19_RealEstate.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
@@ -21,33 +23,47 @@ namespace _08_19_RealEstate.Services
             _companiesBrokersDbService = companiesBrokersDbService;
         }
 
-        public ApartmentFormViewModel GetModelForApartmentForm()
+        public ApartmentFormViewModel GetModelForCreatingApartment()
         {
-            ApartmentFormViewModel model = new()
+            return new()
             {
                 Apartment = new() { Address = new() },
                 Brokers = _brokersDbService.GetBrokers(),
                 Companies = _companiesDbService.GetCompanies()
             };
-
-            return model;
         }
 
-        public CompanyFormViewModel GetModelForCompanyForm()
+        public CompanyFormViewModel GetModelForCreatingCompany()
         {
-            CompanyFormViewModel model = new()
+            return new()
             {
                 Company = new() { Address = new() },
                 Brokers = _brokersDbService.GetBrokers()
             };
+        }
 
-            return model;
+        public CompanyFormViewModel GetModelForEditingCompany(int id)
+        {
+            return new()
+            {
+                Company = _companiesDbService.GetCompanies().SingleOrDefault(c => c.Id == id),
+                Brokers = _brokersDbService.GetBrokers(),
+                SelectedBrokersIds = GetBrokersInCompany(id).Select(b => b.Id).ToList()
+            };
         }
 
         public void AddNewCompanyWithBrokers(CompanyFormViewModel model)
         {
             int companyId = _companiesDbService.AddCompanyAndGetItsId(model.Company);
             _companiesBrokersDbService.AddCompaniesBrokersJunctions(companyId, model.SelectedBrokersIds);
+        }
+
+        public List<Broker> GetBrokersInCompany(int companyId)
+        {
+            List<int> brokersIds = _companiesBrokersDbService.GetBrokersIdsForCompany(companyId);
+            List<Broker> brokers = _brokersDbService.GetBrokers(brokersIds);
+
+            return brokers;
         }
     }
 }

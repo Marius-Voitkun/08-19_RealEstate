@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
@@ -32,6 +33,20 @@ namespace _08_19_RealEstate.Services
             {
                 _connection.Execute(query);
             }
+        }
+
+        public List<int> GetBrokersIdsForCompany(int companyId)
+        {
+            string query = $"SELECT BrokerId FROM dbo.CompaniesBrokers WHERE CompanyId = {companyId};";
+
+            List<int> brokersIds = new();
+
+            using (_connection)
+            {
+                brokersIds = _connection.Query<int>(query).ToList();
+            }
+
+            return brokersIds;
         }
     }
 }

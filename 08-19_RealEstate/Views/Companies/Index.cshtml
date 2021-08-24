@@ -25,9 +25,11 @@ else
             @foreach (var company in Model)
             {
                 <tr>
-                    <td class="text-center align-middle">@company.Name</td>
+                    <td class="text-center align-middle">@Html.ActionLink(company.Name, "Edit", "Companies", new { id = company.Id })</td>
                     <td class="text-center align-middle">@company.Address.ToString()</td>
-                    <td class="text-center align-middle">@Html.ActionLink("Show brokers", "", "")</td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink("Show brokers", "BrokersInCompany", "Brokers", new { companyId = company.Id, companyName = company.Name })
+                    </td>
                 </tr>
             }
         </tbody>

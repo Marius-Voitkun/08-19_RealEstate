@@ -55,5 +55,19 @@ namespace _08_19_RealEstate.Services
 
             return companyId;
         }
+
+        public void UpdateCompany(Company company)
+        {
+            _addressesDbService.UpdateAddress(company.Address);
+
+            string query = $@"UPDATE dbo.Companies
+                              SET Name = N'{company.Name}'
+                              WHERE Id = {company.Id};";
+
+            using (_connection)
+            {
+                _connection.Execute(query);
+            }
+        }
     }
 }

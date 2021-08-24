@@ -11,10 +11,12 @@ namespace _08_19_RealEstate.Controllers
     public class BrokersController : Controller
     {
         private BrokersDbService _dbService;
+        private GeneralService _generalService;
 
-        public BrokersController(BrokersDbService dbService)
+        public BrokersController(BrokersDbService dbService, GeneralService generalService)
         {
             _dbService = dbService;
+            _generalService = generalService;
         }
 
         public IActionResult Index()
@@ -33,6 +35,15 @@ namespace _08_19_RealEstate.Controllers
             _dbService.AddBroker(newBroker);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult BrokersInCompany(int companyId, string companyName)
+        {
+            List<Broker> brokers = _generalService.GetBrokersInCompany(companyId);
+
+            ViewData["CompanyName"] = companyName;
+
+            return View(brokers);
         }
     }
 }

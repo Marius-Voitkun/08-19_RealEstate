@@ -27,7 +27,7 @@ namespace _08_19_RealEstate.Controllers
 
         public IActionResult Create()
         {
-            ApartmentFormViewModel model = _generalService.GetModelForApartmentForm();
+            ApartmentFormViewModel model = _generalService.GetModelForCreatingApartment();
 
             return View(model);
         }

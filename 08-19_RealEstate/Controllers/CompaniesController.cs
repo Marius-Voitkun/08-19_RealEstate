@@ -27,7 +27,7 @@ namespace _08_19_RealEstate.Controllers
 
         public IActionResult Create()
         {
-            CompanyFormViewModel model = _generalService.GetModelForCompanyForm();
+            CompanyFormViewModel model = _generalService.GetModelForCreatingCompany();
 
             return View(model);
         }
@@ -36,6 +36,24 @@ namespace _08_19_RealEstate.Controllers
         public IActionResult Create(CompanyFormViewModel model)
         {
             _generalService.AddNewCompanyWithBrokers(model);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            CompanyFormViewModel model = _generalService.GetModelForEditingCompany(id);
+
+            if (model.Company == null)
+                return NotFound();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(CompanyFormViewModel model)
+        {
+
 
             return RedirectToAction("Index");
         }
