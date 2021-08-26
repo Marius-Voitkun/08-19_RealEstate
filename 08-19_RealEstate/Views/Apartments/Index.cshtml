@@ -1,13 +1,41 @@
-﻿@model List<Apartment>
+﻿@model _08_19_RealEstate.ViewModels.ApartmentsIndexViewModel
 @{
     ViewData["Title"] = "Apartments";
+
+    var brokers = Model.Brokers.Select(b => new { Id = b.Id, FullName = b.ToString() }).ToList();
 }
 
 <h2 class="d-inline-block mb-4">Apartments</h2>
 
 @Html.ActionLink("Add an apartment", "Create", "Apartments", null, new { @class = "btn btn-primary float-right" })
 
-@if (Model.Count == 0)
+@using (Html.BeginForm("Index", "Apartments", FormMethod.Post))
+{
+    <p class="font-weight-bold">Filter by:</p>
+    <div class="row">
+        <div class="col-sm">
+            @Html.DropDownListFor(m => m.CityForFiltering,
+                                  new SelectList(Model.Cities),
+                                  "City",
+                                  new { @class = "form-control" })
+        </div>
+        <div class="col-sm">
+            @Html.DropDownListFor(m => m.CompanyIdForFiltering,
+                                  new SelectList(Model.Companies, "Id", "Name"),
+                                  "Company",
+                                  new { @class = "form-control" })
+        </div>
+        <div class="col-sm">
+            @Html.DropDownListFor(m => m.BrokerIdForFiltering,
+                                  new SelectList(brokers, "Id", "FullName"),
+                                  "Broker",
+                                  new { @class = "form-control" })
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3 mb-4">Filter</button>
+}
+
+@if (Model.Apartments.Count == 0)
 {
     <p>There are no apartments.</p>
 }
@@ -22,7 +50,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var apartment in Model)
+            @foreach (var apartment in Model.Apartments)
             {
                 <tr>
                     <td class="text-center align-middle">@apartment.Address.ToString()</td>

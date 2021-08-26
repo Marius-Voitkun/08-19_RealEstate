@@ -1,4 +1,5 @@
 ﻿using _08_19_RealEstate.Models;
+using _08_19_RealEstate.ViewModels;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,11 @@ namespace _08_19_RealEstate.Services
             _companiesDbService = companiesDbService;
         }
 
-        public List<Apartment> GetApartments()
+        public List<Apartment> GetApartments(ApartmentsIndexViewModel modelForFiltering)
         {
             List<Apartment> apartments = new();
 
-            string query = "SELECT * FROM dbo.Apartments;";
+            string query = GenerateQueryToGetFilteredApartments(modelForFiltering);
 
             using (_connection)
             {
@@ -46,6 +47,37 @@ namespace _08_19_RealEstate.Services
             }
 
             return apartments;
+        }
+
+        private string GenerateQueryToGetFilteredApartments(ApartmentsIndexViewModel modelForFiltering)
+        {
+            string fragmentForCity = modelForFiltering.CityForFiltering != null
+                                                ? $"City = N'{modelForFiltering.CityForFiltering}'"
+                                                : null;
+
+            string fragmentForCompany = modelForFiltering.CompanyIdForFiltering != null
+                                                ? $"CompanyId = {modelForFiltering.CompanyIdForFiltering}"
+                                                : null;
+
+            string fragmentForBroker = modelForFiltering.BrokerIdForFiltering != null
+                                                ? $"BrokerId = {modelForFiltering.BrokerIdForFiltering}"
+                                                : null;
+
+            List<string> fragments = new() { fragmentForCity, fragmentForCompany, fragmentForBroker };
+            
+            string joinedFragments = string.Join(" AND ", fragments.Where(f => !string.IsNullOrWhiteSpace(f)));
+
+            string whereClause = !string.IsNullOrWhiteSpace(joinedFragments)
+                                                ? "WHERE " + joinedFragments
+                                                : "";
+
+            string query = @$"
+SELECT ap.Id, ap.AddressId, ap.Floor, ap.TotalFloorsInBuilding, ap.AreaInSqm, ap.BrokerId, ap.CompanyId
+FROM dbo.Apartments ap
+JOIN dbo.Addresses ad ON ad.Id = ap.AddressId
+{whereClause};";
+
+            return query;
         }
 
         public void AddApartment(Apartment apartment)

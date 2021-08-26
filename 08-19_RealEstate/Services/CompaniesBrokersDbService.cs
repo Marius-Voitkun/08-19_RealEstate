@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using _08_19_RealEstate.ViewModels;
+using Dapper;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -47,6 +48,16 @@ namespace _08_19_RealEstate.Services
             }
 
             return brokersIds;
+        }
+
+        public void DeleteCompaniesBrokersJunctions(int companyId)
+        {
+            string query = $"DELETE FROM dbo.CompaniesBrokers WHERE CompanyId = {companyId};";
+
+            using (_connection)
+            {
+                _connection.Execute(query);
+            }
         }
     }
 }

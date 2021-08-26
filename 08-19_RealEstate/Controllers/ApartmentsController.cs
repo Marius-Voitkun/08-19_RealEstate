@@ -20,9 +20,9 @@ namespace _08_19_RealEstate.Controllers
             _generalService = generalService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(ApartmentsIndexViewModel modelForFiltering = null)
         {
-            return View(_dbService.GetApartments());
+            return View(_generalService.GetModelForApartmentsIndex(modelForFiltering));
         }
 
         public IActionResult Create()

@@ -1,5 +1,6 @@
 ﻿using _08_19_RealEstate.Models;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,11 +11,13 @@ namespace _08_19_RealEstate.Services
     {
         private readonly SqlConnection _connection;
         private readonly AddressesDbService _addressesDbService;
+        private readonly IConfiguration _configuration;
 
-        public CompaniesDbService(SqlConnection connection, AddressesDbService addressesDbService)
+        public CompaniesDbService(SqlConnection connection, AddressesDbService addressesDbService, IConfiguration configuration)
         {
             _connection = connection;
             _addressesDbService = addressesDbService;
+            _configuration = configuration;
         }
 
         public List<Company> GetCompanies()
@@ -23,8 +26,15 @@ namespace _08_19_RealEstate.Services
 
             string query = "SELECT * FROM dbo.Companies;";
 
-            using (_connection)
+            //using (_connection)
+            //{
+            //    companies = _connection.Query<Company>(query).ToList();
+            //}
+
+            using (var connection = new SqlConnection())
             {
+                connection.ConnectionString = _configuration.GetConnectionString("Default");
+
                 companies = _connection.Query<Company>(query).ToList();
             }
 

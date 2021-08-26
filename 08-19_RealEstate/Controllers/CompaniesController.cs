@@ -35,7 +35,7 @@ namespace _08_19_RealEstate.Controllers
         [HttpPost]
         public IActionResult Create(CompanyFormViewModel model)
         {
-            _generalService.AddNewCompanyWithBrokers(model);
+            _generalService.AddNewCompanyWithItsBrokers(model);
 
             return RedirectToAction("Index");
         }
@@ -53,7 +53,7 @@ namespace _08_19_RealEstate.Controllers
         [HttpPost]
         public IActionResult Edit(CompanyFormViewModel model)
         {
-
+            _generalService.UpdateCompanyWithItsBrokers(model);
 
             return RedirectToAction("Index");
         }

@@ -23,7 +23,7 @@ namespace _08_19_RealEstate.Services
             List<Broker> brokers = new();
             string queryFragmentToFilterByIds = "";
             
-            if (brokersIds != null)
+            if (brokersIds != null && brokersIds.Count != 0)
             {
                 string brokersIdsJoined = string.Join(", ", brokersIds);
                 queryFragmentToFilterByIds = $"WHERE Id IN ({brokersIdsJoined})";

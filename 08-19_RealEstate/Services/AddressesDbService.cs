@@ -34,6 +34,11 @@ namespace _08_19_RealEstate.Services
             return addresses;
         }
 
+        public List<string> GetCities()
+        {
+            return GetAddresses().Select(a => a.City).Distinct().ToList();
+        }
+
         public int AddAddressAndGetItsId(Address address)
         {
             string query = $@"INSERT INTO dbo.Addresses (City, Street, HouseNr, FlatNr)

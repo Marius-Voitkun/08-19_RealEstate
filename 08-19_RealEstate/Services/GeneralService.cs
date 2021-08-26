@@ -23,6 +23,19 @@ namespace _08_19_RealEstate.Services
             _companiesBrokersDbService = companiesBrokersDbService;
         }
 
+        public ApartmentsIndexViewModel GetModelForApartmentsIndex(ApartmentsIndexViewModel modelForFiltering)
+        {
+            ApartmentsIndexViewModel model = new()
+            {
+                Apartments = _apartmentsDbService.GetApartments(modelForFiltering),
+                Companies = _companiesDbService.GetCompanies(),
+                Brokers = _brokersDbService.GetBrokers(),
+                Cities = _addressesDbService.GetCities()
+            };
+
+            return model;
+        }
+
         public ApartmentFormViewModel GetModelForCreatingApartment()
         {
             return new()
@@ -52,10 +65,18 @@ namespace _08_19_RealEstate.Services
             };
         }
 
-        public void AddNewCompanyWithBrokers(CompanyFormViewModel model)
+        public void AddNewCompanyWithItsBrokers(CompanyFormViewModel model)
         {
             int companyId = _companiesDbService.AddCompanyAndGetItsId(model.Company);
             _companiesBrokersDbService.AddCompaniesBrokersJunctions(companyId, model.SelectedBrokersIds);
+        }
+
+        public void UpdateCompanyWithItsBrokers(CompanyFormViewModel model)
+        {
+            _companiesDbService.UpdateCompany(model.Company);
+
+            _companiesBrokersDbService.DeleteCompaniesBrokersJunctions(model.Company.Id);
+            _companiesBrokersDbService.AddCompaniesBrokersJunctions(model.Company.Id, model.SelectedBrokersIds);
         }
 
         public List<Broker> GetBrokersInCompany(int companyId)
