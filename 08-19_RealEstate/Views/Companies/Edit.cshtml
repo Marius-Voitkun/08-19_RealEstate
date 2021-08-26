@@ -33,6 +33,7 @@
     </div>
 
     @Html.HiddenFor(m => m.Company.Id)
+    @Html.HiddenFor(m => m.Company.Address.Id)
 
     <button type="submit" class="btn btn-primary">Save changes</button>
     @Html.ActionLink("Cancel", "Index", "Companies", null, new { @class = "btn btn-secondary" })

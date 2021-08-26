@@ -1,5 +1,6 @@
 ﻿using _08_19_RealEstate.ViewModels;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,10 +10,12 @@ namespace _08_19_RealEstate.Services
     public class CompaniesBrokersDbService
     {
         private readonly SqlConnection _connection;
+        private readonly IConfiguration _configuration;
 
-        public CompaniesBrokersDbService(SqlConnection connection)
+        public CompaniesBrokersDbService(SqlConnection connection, IConfiguration configuration)
         {
             _connection = connection;
+            _configuration = configuration;
         }
 
         public void AddCompaniesBrokersJunctions(int companyId, List<int> brokerIds)
@@ -30,9 +33,16 @@ namespace _08_19_RealEstate.Services
             string query = @$"INSERT INTO dbo.CompaniesBrokers (CompanyId, BrokerId)
                               VALUES {valueSetsJoined};";
 
-            using (_connection)
+            //using (_connection)
+            //{
+            //    _connection.Execute(query);
+            //}
+
+            using (var connection = new SqlConnection())
             {
-                _connection.Execute(query);
+                connection.ConnectionString = _configuration.GetConnectionString("Default");
+
+                connection.Execute(query);
             }
         }
 
