@@ -9,12 +9,10 @@ namespace _08_19_RealEstate.Services
 {
     public class AddressesDbService
     {
-        private readonly SqlConnection _connection;
         private readonly IConfiguration _configuration;
 
-        public AddressesDbService(SqlConnection connection, IConfiguration configuration)
+        public AddressesDbService(IConfiguration configuration)
         {
-            _connection = connection;
             _configuration = configuration;
         }
 
@@ -24,10 +22,8 @@ namespace _08_19_RealEstate.Services
 
             string query = "SELECT * FROM dbo.Addresses;";
 
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                connection.ConnectionString = _configuration.GetConnectionString("Default");
-
                 addresses = connection.Query<Address>(query).ToList();
             }
 
@@ -47,9 +43,9 @@ namespace _08_19_RealEstate.Services
 
             int addressId = 0;
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                addressId = _connection.Query<int>(query).ToList()[0];
+                addressId = connection.Query<int>(query).ToList()[0];
             }
 
             return addressId;
@@ -61,9 +57,9 @@ namespace _08_19_RealEstate.Services
                               SET City = N'{address.City}', Street = N'{address.Street}', HouseNr = '{address.HouseNr}', FlatNr = '{address.FlatNr}'
                               WHERE Id = {address.Id};";
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                _connection.Execute(query);
+                connection.Execute(query);
             }
         }
     }

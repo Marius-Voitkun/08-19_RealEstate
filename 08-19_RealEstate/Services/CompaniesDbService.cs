@@ -9,13 +9,11 @@ namespace _08_19_RealEstate.Services
 {
     public class CompaniesDbService
     {
-        private readonly SqlConnection _connection;
         private readonly AddressesDbService _addressesDbService;
         private readonly IConfiguration _configuration;
 
-        public CompaniesDbService(SqlConnection connection, AddressesDbService addressesDbService, IConfiguration configuration)
+        public CompaniesDbService(AddressesDbService addressesDbService, IConfiguration configuration)
         {
-            _connection = connection;
             _addressesDbService = addressesDbService;
             _configuration = configuration;
         }
@@ -26,16 +24,9 @@ namespace _08_19_RealEstate.Services
 
             string query = "SELECT * FROM dbo.Companies;";
 
-            //using (_connection)
-            //{
-            //    companies = _connection.Query<Company>(query).ToList();
-            //}
-
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                connection.ConnectionString = _configuration.GetConnectionString("Default");
-
-                companies = _connection.Query<Company>(query).ToList();
+                companies = connection.Query<Company>(query).ToList();
             }
 
             List<Address> addresses = _addressesDbService.GetAddresses();
@@ -48,7 +39,7 @@ namespace _08_19_RealEstate.Services
             return companies;
         }
 
-        public int AddCompanyAndGetItsId(Company company)
+        public int AddCompanyAndGetId(Company company)
         {
             int addressId = _addressesDbService.AddAddressAndGetItsId(company.Address);
 
@@ -58,9 +49,9 @@ namespace _08_19_RealEstate.Services
 
             int companyId = 0;
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                companyId = _connection.Query<int>(query).ToList()[0];
+                companyId = connection.Query<int>(query).ToList()[0];
             }
 
             return companyId;
@@ -74,9 +65,9 @@ namespace _08_19_RealEstate.Services
                               SET Name = N'{company.Name}'
                               WHERE Id = {company.Id};";
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                _connection.Execute(query);
+                connection.Execute(query);
             }
         }
     }

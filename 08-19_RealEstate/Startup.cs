@@ -26,7 +26,7 @@ namespace _08_19_RealEstate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddTransient<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddScoped<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
             services.AddScoped<GeneralService>();
             services.AddScoped<ApartmentsDbService>();
             services.AddScoped<BrokersDbService>();
@@ -59,7 +59,7 @@ namespace _08_19_RealEstate
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Apartments}/{action=Index}/{id?}");
             });
         }
     }

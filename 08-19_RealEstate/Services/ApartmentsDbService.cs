@@ -1,6 +1,7 @@
 ﻿using _08_19_RealEstate.Models;
 using _08_19_RealEstate.ViewModels;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,17 +12,18 @@ namespace _08_19_RealEstate.Services
 {
     public class ApartmentsDbService
     {
-        private readonly SqlConnection _connection;
         private readonly AddressesDbService _addressesDbService;
         private readonly BrokersDbService _brokersDbService;
         private readonly CompaniesDbService _companiesDbService;
+        private readonly IConfiguration _configuration;
 
-        public ApartmentsDbService(SqlConnection connection, AddressesDbService addressesDbService, BrokersDbService brokersDbService, CompaniesDbService companiesDbService)
+        public ApartmentsDbService(AddressesDbService addressesDbService, BrokersDbService brokersDbService,
+                    CompaniesDbService companiesDbService, IConfiguration configuration)
         {
-            _connection = connection;
             _addressesDbService = addressesDbService;
             _brokersDbService = brokersDbService;
             _companiesDbService = companiesDbService;
+            _configuration = configuration;
         }
 
         public List<Apartment> GetApartments(ApartmentsIndexViewModel modelForFiltering)
@@ -30,9 +32,9 @@ namespace _08_19_RealEstate.Services
 
             string query = GenerateQueryToGetFilteredApartments(modelForFiltering);
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                apartments = _connection.Query<Apartment>(query).ToList();
+                apartments = connection.Query<Apartment>(query).ToList();
             }
 
             List<Address> addresses = _addressesDbService.GetAddresses();
@@ -71,11 +73,10 @@ namespace _08_19_RealEstate.Services
                                                 ? "WHERE " + joinedFragments
                                                 : "";
 
-            string query = @$"
-SELECT ap.Id, ap.AddressId, ap.Floor, ap.TotalFloorsInBuilding, ap.AreaInSqm, ap.BrokerId, ap.CompanyId
-FROM dbo.Apartments ap
-JOIN dbo.Addresses ad ON ad.Id = ap.AddressId
-{whereClause};";
+            string query = @$"SELECT ap.Id, ap.AddressId, ap.Floor, ap.TotalFloorsInBuilding, ap.AreaInSqm, ap.BrokerId, ap.CompanyId
+                              FROM dbo.Apartments ap
+                              LEFT JOIN dbo.Addresses ad ON ad.Id = ap.AddressId
+                              {whereClause};";
 
             return query;
         }
@@ -88,9 +89,9 @@ JOIN dbo.Addresses ad ON ad.Id = ap.AddressId
                               VALUES ({addressId}, {apartment.Floor}, {apartment.TotalFloorsInBuilding},
                                     {apartment.AreaInSqm}, {apartment.BrokerId}, {apartment.CompanyId});";
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                _connection.Execute(query);
+                connection.Execute(query);
             }
         }
     }

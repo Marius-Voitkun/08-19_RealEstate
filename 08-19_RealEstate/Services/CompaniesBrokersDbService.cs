@@ -9,12 +9,10 @@ namespace _08_19_RealEstate.Services
 {
     public class CompaniesBrokersDbService
     {
-        private readonly SqlConnection _connection;
         private readonly IConfiguration _configuration;
 
-        public CompaniesBrokersDbService(SqlConnection connection, IConfiguration configuration)
+        public CompaniesBrokersDbService(IConfiguration configuration)
         {
-            _connection = connection;
             _configuration = configuration;
         }
 
@@ -33,15 +31,8 @@ namespace _08_19_RealEstate.Services
             string query = @$"INSERT INTO dbo.CompaniesBrokers (CompanyId, BrokerId)
                               VALUES {valueSetsJoined};";
 
-            //using (_connection)
-            //{
-            //    _connection.Execute(query);
-            //}
-
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                connection.ConnectionString = _configuration.GetConnectionString("Default");
-
                 connection.Execute(query);
             }
         }
@@ -52,9 +43,9 @@ namespace _08_19_RealEstate.Services
 
             List<int> brokersIds = new();
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                brokersIds = _connection.Query<int>(query).ToList();
+                brokersIds = connection.Query<int>(query).ToList();
             }
 
             return brokersIds;
@@ -64,9 +55,9 @@ namespace _08_19_RealEstate.Services
         {
             string query = $"DELETE FROM dbo.CompaniesBrokers WHERE CompanyId = {companyId};";
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                _connection.Execute(query);
+                connection.Execute(query);
             }
         }
     }

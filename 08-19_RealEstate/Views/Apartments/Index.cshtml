@@ -16,19 +16,19 @@
         <div class="col-sm">
             @Html.DropDownListFor(m => m.CityForFiltering,
                                   new SelectList(Model.Cities),
-                                  "City",
+                                  "<City>",
                                   new { @class = "form-control" })
         </div>
         <div class="col-sm">
             @Html.DropDownListFor(m => m.CompanyIdForFiltering,
                                   new SelectList(Model.Companies, "Id", "Name"),
-                                  "Company",
+                                  "<Company>",
                                   new { @class = "form-control" })
         </div>
         <div class="col-sm">
             @Html.DropDownListFor(m => m.BrokerIdForFiltering,
                                   new SelectList(brokers, "Id", "FullName"),
-                                  "Broker",
+                                  "<Broker>",
                                   new { @class = "form-control" })
         </div>
     </div>

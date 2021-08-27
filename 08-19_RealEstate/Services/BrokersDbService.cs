@@ -9,12 +9,10 @@ namespace _08_19_RealEstate.Services
 {
     public class BrokersDbService
     {
-        private readonly SqlConnection _connection;
         private readonly IConfiguration _configuration;
 
-        public BrokersDbService(SqlConnection connection, IConfiguration configuration)
+        public BrokersDbService(IConfiguration configuration)
         {
-            _connection = connection;
             _configuration = configuration;
         }
 
@@ -32,15 +30,9 @@ namespace _08_19_RealEstate.Services
             string query = @$"SELECT * FROM dbo.Brokers
                               {queryFragmentToFilterByIds};";
 
-            //using (_connection)
-            //{
-            //    brokers = _connection.Query<Broker>(query).ToList();
-            //}
-            using (var connection = new SqlConnection())
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                connection.ConnectionString = _configuration.GetConnectionString("Default");
-
-                brokers = _connection.Query<Broker>(query).ToList();
+                brokers = connection.Query<Broker>(query).ToList();
             }
 
             return brokers;
@@ -51,9 +43,9 @@ namespace _08_19_RealEstate.Services
             string query = @$"INSERT INTO dbo.Brokers (FirstName, LastName)
                               VALUES (N'{broker.FirstName}', N'{broker.LastName}');";
 
-            using (_connection)
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
-                _connection.Execute(query);
+                connection.Execute(query);
             }
         }
     }

@@ -30,8 +30,10 @@ namespace _08_19_RealEstate.Services
                 Apartments = _apartmentsDbService.GetApartments(modelForFiltering),
                 Companies = _companiesDbService.GetCompanies(),
                 Brokers = _brokersDbService.GetBrokers(),
-                Cities = _addressesDbService.GetCities()
             };
+
+            //model.Cities = _addressesDbService.GetCities();
+            model.Cities = _apartmentsDbService.GetApartments(new ApartmentsIndexViewModel()).Select(a => a.Address.City).Distinct().ToList();
 
             return model;
         }
@@ -67,7 +69,7 @@ namespace _08_19_RealEstate.Services
 
         public void AddNewCompanyWithItsBrokers(CompanyFormViewModel model)
         {
-            int companyId = _companiesDbService.AddCompanyAndGetItsId(model.Company);
+            int companyId = _companiesDbService.AddCompanyAndGetId(model.Company);
             _companiesBrokersDbService.AddCompaniesBrokersJunctions(companyId, model.SelectedBrokersIds);
         }
 
