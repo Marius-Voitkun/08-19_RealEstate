@@ -53,6 +53,10 @@ namespace _08_19_RealEstate.Services
 
         private string GenerateQueryToGetFilteredApartments(ApartmentsFilterModel filterModel)
         {
+            string fragmentForApartmentId = filterModel.ApartmentId != null
+                                                ? $"ap.Id = {filterModel.ApartmentId}"
+                                                : null;
+
             string fragmentForCity = filterModel.City != null
                                                 ? $"City = N'{filterModel.City}'"
                                                 : null;
@@ -65,7 +69,7 @@ namespace _08_19_RealEstate.Services
                                                 ? $"BrokerId = {filterModel.BrokerId}"
                                                 : null;
 
-            List<string> fragments = new() { fragmentForCity, fragmentForCompany, fragmentForBroker };
+            List<string> fragments = new() { fragmentForApartmentId, fragmentForCity, fragmentForCompany, fragmentForBroker };
             
             string joinedFragments = string.Join(" AND ", fragments.Where(f => !string.IsNullOrWhiteSpace(f)));
 
@@ -88,6 +92,24 @@ namespace _08_19_RealEstate.Services
             string query = $@"INSERT INTO dbo.Apartments (AddressId, Floor, TotalFloorsInBuilding, AreaInSqm, BrokerId, CompanyId)
                               VALUES ({addressId}, {apartment.Floor}, {apartment.TotalFloorsInBuilding},
                                     {apartment.AreaInSqm}, {apartment.BrokerId}, {apartment.CompanyId});";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Execute(query);
+            }
+        }
+
+        public void UpdateApartment(Apartment apartment)
+        {
+            _addressesDbService.UpdateAddress(apartment.Address);
+
+            string query = $@"UPDATE dbo.Apartments
+                              SET
+                                    Floor = {apartment.Floor},
+                                    TotalFloorsInBuilding = {apartment.TotalFloorsInBuilding},
+                                    AreaInSqm = {apartment.AreaInSqm},
+                                    BrokerId = {apartment.BrokerId},
+                                    CompanyId = {apartment.CompanyId};";
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {

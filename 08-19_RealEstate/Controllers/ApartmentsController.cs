@@ -28,17 +28,35 @@ namespace _08_19_RealEstate.Controllers
             return View(_generalService.GetModelForApartmentsIndex(modelForFiltering.FilterModel));
         }
 
+        public IActionResult Details(int id)
+        {
+            Apartment apartment = _dbService.GetApartments(new ApartmentsFilterModel { ApartmentId = id })[0];
+
+            return View(apartment);
+        }
+
         public IActionResult Create()
         {
-            ApartmentFormViewModel model = _generalService.GetModelForCreatingApartment();
-
-            return View(model);
+            return View(_generalService.GetModelForCreatingApartment());
         }
 
         [HttpPost]
         public IActionResult Create(Apartment apartment)
         {
             _dbService.AddApartment(apartment);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            return View(_generalService.GetModelForEditingApartment(id));
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Apartment apartment)
+        {
+            _dbService.UpdateApartment(apartment);
 
             return RedirectToAction("Index");
         }

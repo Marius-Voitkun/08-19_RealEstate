@@ -53,7 +53,13 @@ else
             @foreach (var apartment in Model.Apartments)
             {
                 <tr>
-                    <td class="text-center align-middle">@apartment.Address.ToString()</td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink(
+                                        apartment.Address.ToString(),
+                                        "Details",
+                                        "Apartments",
+                                        new { id = apartment.Id })
+                    </td>
                     <td class="text-center align-middle">
                         @Html.ActionLink(
                                         apartment.Company.Name,

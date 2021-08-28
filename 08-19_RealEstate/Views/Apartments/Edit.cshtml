@@ -1,5 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model _08_19_RealEstate.ViewModels.ApartmentFormViewModel
 @{
+    ViewData["Title"] = "Edit Apartment";
+
+    var brokers = Model.Brokers.Select(b => new { Id = b.Id, FullName = b.ToString() }).ToList();
 }
+
+<h2>Edit apartment</h2>
+
+@using (Html.BeginForm("Edit", "Apartments", FormMethod.Post))
+{
+    <div class="form-row">
+        <div class="form-group col-sm-6 col-md-4">
+            @Html.LabelFor(m => m.Apartment.Address.City)
+            @Html.TextBoxFor(m => m.Apartment.Address.City, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-sm-6 col-md-4">
+            @Html.LabelFor(m => m.Apartment.Address.Street)
+            @Html.TextBoxFor(m => m.Apartment.Address.Street, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-6 col-md-2">
+            @Html.LabelFor(m => m.Apartment.Address.HouseNr, "House Nr.")
+            @Html.TextBoxFor(m => m.Apartment.Address.HouseNr, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-6 col-md-2">
+            @Html.LabelFor(m => m.Apartment.Address.FlatNr, "Flat Nr.")
+            @Html.TextBoxFor(m => m.Apartment.Address.FlatNr, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-4">
+            @Html.LabelFor(m => m.Apartment.Floor)
+            @Html.TextBoxFor(m => m.Apartment.Floor, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-4">
+            @Html.LabelFor(m => m.Apartment.TotalFloorsInBuilding, "Total floors in the building")
+            @Html.TextBoxFor(m => m.Apartment.TotalFloorsInBuilding, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-4">
+            @Html.LabelFor(m => m.Apartment.AreaInSqm, "Area in m²")
+            @Html.TextBoxFor(m => m.Apartment.AreaInSqm, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            @Html.LabelFor(m => m.Apartment.CompanyId, "Select company")
+            @Html.DropDownListFor(m => m.Apartment.CompanyId, new SelectList(Model.Companies, "Id", "Name"), "", new { @class = "form-control" })
+        </div>
+        <div class="form-group col-md-6">
+            @Html.LabelFor(m => m.Apartment.BrokerId, "Select broker")
+            @Html.DropDownListFor(m => m.Apartment.BrokerId, new SelectList(brokers, "Id", "FullName"), "", new { @class = "form-control" })
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.Apartment.Id)
+
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    @Html.ActionLink("Cancel", "Index", "Apartments", null, new { @class = "btn btn-secondary" })
+} 

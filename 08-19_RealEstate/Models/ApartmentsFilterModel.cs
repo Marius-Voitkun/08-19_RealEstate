@@ -7,6 +7,8 @@ namespace _08_19_RealEstate.Models
 {
     public class ApartmentsFilterModel
     {
+        public int? ApartmentId { get; set; }
+
         public int? CompanyId { get; set; }
 
         public int? BrokerId { get; set; }

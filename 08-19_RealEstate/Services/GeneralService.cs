@@ -64,6 +64,16 @@ namespace _08_19_RealEstate.Services
             };
         }
 
+        public ApartmentFormViewModel GetModelForEditingApartment(int id)
+        {
+            return new()
+            {
+                Apartment = _apartmentsDbService.GetApartments(new ApartmentsFilterModel { ApartmentId = id })[0],
+                Brokers = _brokersDbService.GetBrokers(),
+                Companies = _companiesDbService.GetCompanies()
+            };
+        }
+
         public CompanyFormViewModel GetModelForCreatingCompany()
         {
             return new()

@@ -1,0 +1,32 @@
+﻿@model Apartment
+@{
+    ViewData["Title"] = Model.Address;
+}
+
+<h2 class="d-inline-block mb-4">@Model.Address</h2>
+
+@Html.ActionLink("Edit", "Edit", "Apartments", new { id = Model.Id }, new { @class = "btn btn-primary float-right" })
+
+<p><span class="font-weight-bold">City: </span>@Model.Address.City</p>
+<p><span class="font-weight-bold">Address:  </span>@Model.Address.ToStringWithoutCity()</p>
+<p><span class="font-weight-bold">Area:  </span>@Model.AreaInSqm m²</p>
+<p><span class="font-weight-bold">Floor:  </span>@Model.Floor</p>
+<p><span class="font-weight-bold">Total floors in the building:  </span>@Model.TotalFloorsInBuilding</p>
+
+<p class="mt-5">
+    <span class="font-weight-bold">Company:  </span>
+    @Html.ActionLink(
+                    Model.Company.Name,
+                    "BrokersInCompany",
+                    "Brokers",
+                    new { companyId = Model.Company.Id, companyName = Model.Company.Name })
+</p>
+<p>
+    <span class="font-weight-bold">Broker:  </span>
+    @Html.ActionLink(
+                    Model.Broker.ToString(),
+                    "ApartmentsOfBroker",
+                    "Apartments",
+                    new { brokerId = Model.Broker.Id, brokerName = Model.Broker.ToString() })
+</p>
+
