@@ -28,5 +28,12 @@ namespace _08_19_RealEstate.Models
 
             return $"{Street} {HouseNr}{flat}, {City}";
         }
+
+        public string ToStringWithoutCity()
+        {
+            string flat = (FlatNr != null && FlatNr != "") ? ('/' + FlatNr) : "";
+
+            return $"{Street} {HouseNr}{flat}";
+        }
     }
 }

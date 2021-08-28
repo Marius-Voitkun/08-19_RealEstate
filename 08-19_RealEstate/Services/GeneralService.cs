@@ -23,17 +23,33 @@ namespace _08_19_RealEstate.Services
             _companiesBrokersDbService = companiesBrokersDbService;
         }
 
-        public ApartmentsIndexViewModel GetModelForApartmentsIndex(ApartmentsIndexViewModel modelForFiltering)
+        public ApartmentsIndexViewModel GetModelForApartmentsIndex(ApartmentsFilterModel filterModel)
         {
             ApartmentsIndexViewModel model = new()
             {
-                Apartments = _apartmentsDbService.GetApartments(modelForFiltering),
+                Apartments = _apartmentsDbService.GetApartments(filterModel),
                 Companies = _companiesDbService.GetCompanies(),
                 Brokers = _brokersDbService.GetBrokers(),
             };
 
             //model.Cities = _addressesDbService.GetCities();
-            model.Cities = _apartmentsDbService.GetApartments(new ApartmentsIndexViewModel()).Select(a => a.Address.City).Distinct().ToList();
+            model.Cities = _apartmentsDbService.GetApartments(new ApartmentsFilterModel()).Select(a => a.Address.City).Distinct().ToList();
+
+            return model;
+        }
+
+        public ApartmentsOfBrokerViewModel GetApartmentsOfBroker(ApartmentsOfBrokerViewModel modelForFiltering)
+        {
+            int? brokerId = modelForFiltering.FilterModel.BrokerId;
+
+            ApartmentsOfBrokerViewModel model = new()
+            {
+                Apartments = _apartmentsDbService.GetApartments(modelForFiltering.FilterModel),
+                FilterModel = new()
+            };
+
+            model.Cities = _apartmentsDbService.GetApartments(new ApartmentsFilterModel() { BrokerId = brokerId })
+                                .Select(a => a.Address.City).Distinct().ToList();
 
             return model;
         }

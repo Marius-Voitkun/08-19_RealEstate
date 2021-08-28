@@ -37,6 +37,24 @@ namespace _08_19_RealEstate.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Edit(int id)
+        {
+            Broker broker = _dbService.GetBrokers().SingleOrDefault(b => b.Id == id);
+
+            if (broker == null)
+                return NotFound();
+
+            return View(broker);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Broker broker)
+        {
+            _dbService.UpdateBroker(broker);
+
+            return RedirectToAction("Index");
+        }
+
         public IActionResult BrokersInCompany(int companyId, string companyName)
         {
             List<Broker> brokers = _generalService.GetBrokersInCompany(companyId);

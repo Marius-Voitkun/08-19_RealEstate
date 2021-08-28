@@ -1,0 +1,61 @@
+﻿@model _08_19_RealEstate.ViewModels.ApartmentsOfBrokerViewModel
+@{
+    string brokerName = ViewData["BrokerName"].ToString();
+
+    ViewData["Title"] = $"{brokerName} Apartments";
+}
+
+<h2 class="d-inline-block mb-4">@brokerName apartments</h2>
+
+@*@Html.ActionLink("Add an apartment", "Create", "Apartments", null, new { @class = "btn btn-primary float-right" })*@
+
+@using (Html.BeginForm(
+                    "ApartmentsOfBroker",
+                    "Apartments",
+                    new { brokerId = ViewData["BrokerId"], brokerName = ViewData["BrokerName"] },
+                    FormMethod.Post))
+{
+    <p class="font-weight-bold">Filter by:</p>
+    <div class="row">
+        <div class="col-sm">
+            @Html.DropDownListFor(m => m.FilterModel.City,
+                                  new SelectList(Model.Cities),
+                                  "<City>",
+                                  new { @class = "form-control" })
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3 mb-4">Filter</button>
+}
+
+@if (Model.Apartments.Count == 0)
+{
+    <p>There are no apartments.</p>
+}
+else
+{
+    <table id="apartments" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center align-middle">City</th>
+                <th class="text-center align-middle">Address</th>
+                <th class="text-center align-middle">Company</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var apartment in Model.Apartments)
+            {
+                <tr>
+                    <td class="text-center align-middle">@apartment.Address.City</td>
+                    <td class="text-center align-middle">@apartment.Address.ToStringWithoutCity()</td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink(
+                                        apartment.Company.Name,
+                                        "BrokersInCompany",
+                                        "Brokers",
+                                        new { companyId = apartment.Company.Id, companyName = apartment.Company.Name })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

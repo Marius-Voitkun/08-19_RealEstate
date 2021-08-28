@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.ViewModels
 {
-    public class ApartmentsIndexViewModel
+    public class ApartmentsOfBrokerViewModel
     {
         public List<Apartment> Apartments { get; set; }
-
-        public List<Company> Companies { get; set; }
-
-        public List<Broker> Brokers { get; set; }
 
         public List<string> Cities { get; set; }
 

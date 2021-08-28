@@ -20,9 +20,12 @@ namespace _08_19_RealEstate.Controllers
             _generalService = generalService;
         }
 
-        public IActionResult Index(ApartmentsIndexViewModel modelForFiltering = null)
+        public IActionResult Index(ApartmentsIndexViewModel modelForFiltering)
         {
-            return View(_generalService.GetModelForApartmentsIndex(modelForFiltering));
+            if (modelForFiltering.FilterModel == null)
+                modelForFiltering.FilterModel = new();
+
+            return View(_generalService.GetModelForApartmentsIndex(modelForFiltering.FilterModel));
         }
 
         public IActionResult Create()
@@ -38,6 +41,19 @@ namespace _08_19_RealEstate.Controllers
             _dbService.AddApartment(apartment);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult ApartmentsOfBroker(int brokerId, string brokerName, ApartmentsOfBrokerViewModel modelForFiltering)
+        {
+            if (modelForFiltering.FilterModel == null)
+                modelForFiltering.FilterModel = new();
+
+            modelForFiltering.FilterModel.BrokerId = brokerId;
+
+            ViewData["BrokerId"] = brokerId;
+            ViewData["BrokerName"] = brokerName;
+
+            return View(_generalService.GetApartmentsOfBroker(modelForFiltering));
         }
     }
 }

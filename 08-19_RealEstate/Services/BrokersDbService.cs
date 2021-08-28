@@ -48,5 +48,17 @@ namespace _08_19_RealEstate.Services
                 connection.Execute(query);
             }
         }
+
+        public void UpdateBroker(Broker broker)
+        {
+            string query = @$"UPDATE dbo.Brokers
+                              SET FirstName = N'{broker.FirstName}', LastName = N'{broker.LastName}'
+                              WHERE Id = {broker.Id};";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Execute(query);
+            }
+        }
     }
 }

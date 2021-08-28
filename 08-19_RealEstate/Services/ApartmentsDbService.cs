@@ -26,11 +26,11 @@ namespace _08_19_RealEstate.Services
             _configuration = configuration;
         }
 
-        public List<Apartment> GetApartments(ApartmentsIndexViewModel modelForFiltering)
+        public List<Apartment> GetApartments(ApartmentsFilterModel filterModel)
         {
             List<Apartment> apartments = new();
 
-            string query = GenerateQueryToGetFilteredApartments(modelForFiltering);
+            string query = GenerateQueryToGetFilteredApartments(filterModel);
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
@@ -51,18 +51,18 @@ namespace _08_19_RealEstate.Services
             return apartments;
         }
 
-        private string GenerateQueryToGetFilteredApartments(ApartmentsIndexViewModel modelForFiltering)
+        private string GenerateQueryToGetFilteredApartments(ApartmentsFilterModel filterModel)
         {
-            string fragmentForCity = modelForFiltering.CityForFiltering != null
-                                                ? $"City = N'{modelForFiltering.CityForFiltering}'"
+            string fragmentForCity = filterModel.City != null
+                                                ? $"City = N'{filterModel.City}'"
                                                 : null;
 
-            string fragmentForCompany = modelForFiltering.CompanyIdForFiltering != null
-                                                ? $"CompanyId = {modelForFiltering.CompanyIdForFiltering}"
+            string fragmentForCompany = filterModel.CompanyId != null
+                                                ? $"CompanyId = {filterModel.CompanyId}"
                                                 : null;
 
-            string fragmentForBroker = modelForFiltering.BrokerIdForFiltering != null
-                                                ? $"BrokerId = {modelForFiltering.BrokerIdForFiltering}"
+            string fragmentForBroker = filterModel.BrokerId != null
+                                                ? $"BrokerId = {filterModel.BrokerId}"
                                                 : null;
 
             List<string> fragments = new() { fragmentForCity, fragmentForCompany, fragmentForBroker };

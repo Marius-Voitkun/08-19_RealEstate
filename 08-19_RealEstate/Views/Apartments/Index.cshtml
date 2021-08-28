@@ -14,19 +14,19 @@
     <p class="font-weight-bold">Filter by:</p>
     <div class="row">
         <div class="col-sm">
-            @Html.DropDownListFor(m => m.CityForFiltering,
+            @Html.DropDownListFor(m => m.FilterModel.City,
                                   new SelectList(Model.Cities),
                                   "<City>",
                                   new { @class = "form-control" })
         </div>
         <div class="col-sm">
-            @Html.DropDownListFor(m => m.CompanyIdForFiltering,
+            @Html.DropDownListFor(m => m.FilterModel.CompanyId,
                                   new SelectList(Model.Companies, "Id", "Name"),
                                   "<Company>",
                                   new { @class = "form-control" })
         </div>
         <div class="col-sm">
-            @Html.DropDownListFor(m => m.BrokerIdForFiltering,
+            @Html.DropDownListFor(m => m.FilterModel.BrokerId,
                                   new SelectList(brokers, "Id", "FullName"),
                                   "<Broker>",
                                   new { @class = "form-control" })
@@ -54,8 +54,20 @@ else
             {
                 <tr>
                     <td class="text-center align-middle">@apartment.Address.ToString()</td>
-                    <td class="text-center align-middle">@apartment.Company.Name</td>
-                    <td class="text-center align-middle">@apartment.Broker.ToString()</td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink(
+                                        apartment.Company.Name,
+                                        "BrokersInCompany",
+                                        "Brokers",
+                                        new { companyId = apartment.Company.Id, companyName = apartment.Company.Name })
+                    </td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink(
+                                        apartment.Broker.ToString(),
+                                        "ApartmentsOfBroker",
+                                        "Apartments",
+                                        new { brokerId = apartment.Broker.Id, brokerName = apartment.Broker.ToString() })
+                    </td>
                 </tr>
             }
         </tbody>

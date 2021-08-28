@@ -29,7 +29,9 @@ else
                 <tr>
                     <td class="text-center align-middle">@broker.FirstName</td>
                     <td class="text-center align-middle">@broker.LastName</td>
-                    <td class="text-center align-middle">@Html.ActionLink("Show apartments", "", "")</td>
+                    <td class="text-center align-middle">
+                        @Html.ActionLink("Show apartments", "ApartmentsOfBroker", "Apartments", new { brokerId = broker.Id, brokerName = broker.ToString() })
+                    </td>
                 </tr>
             }
         </tbody>
