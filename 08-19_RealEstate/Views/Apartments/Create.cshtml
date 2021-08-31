@@ -1,8 +1,6 @@
 ﻿@model _08_19_RealEstate.ViewModels.ApartmentFormViewModel
 @{
     ViewData["Title"] = "Add an Apartment";
-
-    var brokers = Model.Brokers.Select(b => new { Id = b.Id, FullName = b.ToString() }).ToList();
 }
 
 <h2>Add an apartment</h2>
@@ -44,16 +42,42 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             @Html.LabelFor(m => m.Apartment.CompanyId, "Select company")
-            @Html.DropDownListFor(m => m.Apartment.CompanyId, new SelectList(Model.Companies, "Id", "Name"), "", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.Apartment.CompanyId, new SelectList(Model.Companies, "Id", "Name"), "<Select Company>", new { @class = "form-control", id = "companies" })
         </div>
         <div class="form-group col-md-6">
             @Html.LabelFor(m => m.Apartment.BrokerId, "Select broker")
-            @Html.DropDownListFor(m => m.Apartment.BrokerId, new SelectList(brokers, "Id", "FullName"), "", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.Apartment.BrokerId, new SelectList(new List<string>()), "<...>", new { @class = "form-control", id = "brokers" })
         </div>
     </div>
 
-    @Html.HiddenFor(m => m.Apartment.Id)
-    
     <button type="submit" class="btn btn-primary">Add</button>
     @Html.ActionLink("Cancel", "Index", "Apartments", null, new { @class = "btn btn-secondary" })
-} 
+}
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#companies").on("change", function () {
+                var companyId = $(this).val();
+                $("#brokers").empty();
+                $("#brokers").append("<option value=''>&lt;Select Broker&gt;</option>");
+                $.each(getBrokersForCompany(companyId), function (i, broker) {
+                    $("#brokers").append(`<option value="${broker.Id}">${broker.FirstName} ${broker.LastName}</option>`);
+                });
+            });
+        });
+
+
+        function getBrokersForCompany(id) {
+            let companiesBrokersJson = @Html.Raw(Json.Serialize(@Model.CompaniesBrokersJson));
+            let brokersJson = @Html.Raw(Json.Serialize(@Model.BrokersJson));
+
+            let companiesBrokers = JSON.parse(companiesBrokersJson);
+            let brokers = JSON.parse(brokersJson);
+
+            let brokersIdsForCompany = companiesBrokers.filter(x => x.CompanyId == id).map(x => x.BrokerId);
+
+            return brokers.filter(b => brokersIdsForCompany.includes(b.Id));
+        }
+    </script>
+}

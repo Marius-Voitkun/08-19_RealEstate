@@ -1,5 +1,6 @@
 ﻿using _08_19_RealEstate.Models;
 using _08_19_RealEstate.ViewModels;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,22 +57,32 @@ namespace _08_19_RealEstate.Services
 
         public ApartmentFormViewModel GetModelForCreatingApartment()
         {
-            return new()
+            ApartmentFormViewModel model = new()
             {
                 Apartment = new() { Address = new() },
                 Brokers = _brokersDbService.GetBrokers(),
-                Companies = _companiesDbService.GetCompanies()
+                Companies = _companiesDbService.GetCompanies(),
+                CompaniesBrokersJson = JsonConvert.SerializeObject(_companiesBrokersDbService.GetCompaniesBrokersJunctions())
             };
+
+            model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
+
+            return model;
         }
 
         public ApartmentFormViewModel GetModelForEditingApartment(int id)
         {
-            return new()
+            ApartmentFormViewModel model = new()
             {
                 Apartment = _apartmentsDbService.GetApartments(new ApartmentsFilterModel { ApartmentId = id })[0],
                 Brokers = _brokersDbService.GetBrokers(),
-                Companies = _companiesDbService.GetCompanies()
+                Companies = _companiesDbService.GetCompanies(),
+                CompaniesBrokersJson = JsonConvert.SerializeObject(_companiesBrokersDbService.GetCompaniesBrokersJunctions())
             };
+
+            model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
+
+            return model;
         }
 
         public CompanyFormViewModel GetModelForCreatingCompany()

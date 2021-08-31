@@ -1,4 +1,5 @@
-﻿using _08_19_RealEstate.ViewModels;
+﻿using _08_19_RealEstate.Models;
+using _08_19_RealEstate.ViewModels;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -14,6 +15,20 @@ namespace _08_19_RealEstate.Services
         public CompaniesBrokersDbService(IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        public List<CompanyBrokerJunction> GetCompaniesBrokersJunctions()
+        {
+            List<CompanyBrokerJunction> companiesBrokers = new();
+
+            string query = "SELECT * FROM dbo.CompaniesBrokers";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                companiesBrokers = connection.Query<CompanyBrokerJunction>(query).ToList();
+            }
+
+            return companiesBrokers;
         }
 
         public void AddCompaniesBrokersJunctions(int companyId, List<int> brokerIds)

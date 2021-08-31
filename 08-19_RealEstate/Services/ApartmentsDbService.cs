@@ -109,7 +109,8 @@ namespace _08_19_RealEstate.Services
                                     TotalFloorsInBuilding = {apartment.TotalFloorsInBuilding},
                                     AreaInSqm = {apartment.AreaInSqm},
                                     BrokerId = {apartment.BrokerId},
-                                    CompanyId = {apartment.CompanyId};";
+                                    CompanyId = {apartment.CompanyId}
+                              WHERE Id = {apartment.Id};";
 
             using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
             {
