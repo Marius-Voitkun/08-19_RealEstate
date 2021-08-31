@@ -15,6 +15,8 @@ namespace _08_19_RealEstate.Models
         [StringLength(30)]
         public string LastName { get; set; }
 
+        public List<Company> Companies { get; set; }
+
         public override string ToString()
         {
             return $"{FirstName} {LastName}";
