@@ -19,22 +19,51 @@ else
                 <th class="text-center align-middle">First Name</th>
                 <th class="text-center align-middle">Last Name</th>
                 <th class="text-center align-middle"></th>
+                <th class="text-center align-middle"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var broker in Model)
             {
-                <tr>
+                <tr id="tr-@broker.Id">
                     <td class="text-center align-middle">@broker.FirstName</td>
                     <td class="text-center align-middle">@broker.LastName</td>
                     <td class="text-center align-middle">
-                        @Html.ActionLink("Edit", "Edit", "Brokers", new { id = broker.Id })
+                        @Html.ActionLink("Show apartments", "ApartmentsOfBroker", "Apartments", new { brokerId = broker.Id, brokerName = broker.ToString() })
                     </td>
                     <td class="text-center align-middle">
-                        @Html.ActionLink("Show apartments", "ApartmentsOfBroker", "Apartments", new { brokerId = broker.Id, brokerName = broker.ToString() })
+                        @Html.ActionLink("Edit", "Edit", "Brokers", new { id = broker.Id }, new { @class = "btn btn-warning" })
+                        <button id="delete-@broker.Id" class="btn btn-danger js-delete">Delete</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#brokers .js-delete").on("click", function () {
+                let id = this.id.split('-')[1];
+
+                if (confirm("Are you sure you want to delete this broker?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: 'Brokers/Delete',
+                        data: {
+                            id: id
+                        },
+                        success: function (data) {
+                            if (data)
+                                alert(data);
+                            else
+                                document.getElementById(`tr-${id}`).innerHTML = '';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

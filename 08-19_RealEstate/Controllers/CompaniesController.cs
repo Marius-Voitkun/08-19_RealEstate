@@ -57,5 +57,13 @@ namespace _08_19_RealEstate.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult Delete(int companyId, int addressId)
+        {
+            if (!_generalService.DeleteCompany(companyId, addressId))
+                return Json("The company could not be deleted.");
+
+            return Json(null);
+        }
     }
 }

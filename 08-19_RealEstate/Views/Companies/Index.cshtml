@@ -19,19 +19,52 @@ else
                 <th class="text-center align-middle">Company Name</th>
                 <th class="text-center align-middle">Address</th>
                 <th class="text-center align-middle"></th>
+                <th class="text-center align-middle"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var company in Model)
             {
-                <tr>
+                <tr id="tr-@company.Id">
                     <td class="text-center align-middle">@Html.ActionLink(company.Name, "Edit", "Companies", new { id = company.Id })</td>
                     <td class="text-center align-middle">@company.Address.ToString()</td>
                     <td class="text-center align-middle">
                         @Html.ActionLink("Show brokers", "BrokersInCompany", "Brokers", new { companyId = company.Id, companyName = company.Name })
                     </td>
+                    <td class="text-center align-middle">
+                        <button id="delete-@company.Id-@company.AddressId" class="btn btn-danger js-delete">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#companies .js-delete").on("click", function () {
+                let companyId = this.id.split('-')[1];
+                let addressId = this.id.split('-')[2];
+
+                if (confirm("Are you sure you want to delete this company?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: 'Companies/Delete',
+                        data: {
+                            companyId: companyId,
+                            addressId: addressId
+                        },
+                        success: function (data) {
+                            if (data)
+                                alert(data);
+                            else
+                                document.getElementById(`tr-${companyId}`).innerHTML = '';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 }

@@ -1,10 +1,8 @@
 ﻿using _08_19_RealEstate.Models;
 using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.Controllers
 {
@@ -53,6 +51,14 @@ namespace _08_19_RealEstate.Controllers
             _dbService.UpdateBroker(broker);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            if (!_generalService.DeleteBroker(id))
+                return Json("The broker could not be deleted.");
+
+            return Json(null);
         }
 
         public IActionResult BrokersInCompany(int companyId, string companyName)

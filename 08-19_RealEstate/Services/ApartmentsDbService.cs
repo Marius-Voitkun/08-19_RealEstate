@@ -117,5 +117,17 @@ namespace _08_19_RealEstate.Services
                 connection.Execute(query);
             }
         }
+
+        public void DeleteApartment(int apartmentId, int addressId)
+        {
+            string query = $"DELETE FROM dbo.Apartments WHERE Id = {apartmentId};";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Execute(query);
+            }
+
+            _addressesDbService.DeleteAddress(addressId);
+        }
     }
 }
