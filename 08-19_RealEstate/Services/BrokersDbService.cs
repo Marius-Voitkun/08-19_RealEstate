@@ -60,5 +60,15 @@ namespace _08_19_RealEstate.Services
                 connection.Execute(query);
             }
         }
+
+        public void DeleteBroker(int id)
+        {
+            string query = $"DELETE FROM dbo.Brokers WHERE Id = {id};";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Execute(query);
+            }
+        }
     }
 }

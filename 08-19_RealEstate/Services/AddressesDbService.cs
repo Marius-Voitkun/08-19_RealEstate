@@ -62,5 +62,15 @@ namespace _08_19_RealEstate.Services
                 connection.Execute(query);
             }
         }
+
+        public void DeleteAddress(int id)
+        {
+            string query = $"DELETE FROM dbo.Addresses WHERE Id = {id};";
+
+            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            {
+                connection.Execute(query);
+            }
+        }
     }
 }

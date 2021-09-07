@@ -2,6 +2,7 @@
 using _08_19_RealEstate.ViewModels;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace _08_19_RealEstate.Services
             _configuration = configuration;
         }
 
-        public List<CompanyBrokerJunction> GetCompaniesBrokersJunctions()
+        public List<CompanyBrokerJunction> GetJunctions()
         {
             List<CompanyBrokerJunction> companiesBrokers = new();
 
@@ -31,7 +32,7 @@ namespace _08_19_RealEstate.Services
             return companiesBrokers;
         }
 
-        public void AddCompaniesBrokersJunctions(int companyId, List<int> brokerIds)
+        public void AddJunctions(int companyId, List<int> brokerIds)
         {
             if (brokerIds.Count == 0)
                 return;
@@ -66,14 +67,42 @@ namespace _08_19_RealEstate.Services
             return brokersIds;
         }
 
-        public void DeleteCompaniesBrokersJunctions(int companyId)
+        public bool DeleteJunctionsByCompany(int companyId)
         {
             string query = $"DELETE FROM dbo.CompaniesBrokers WHERE CompanyId = {companyId};";
 
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            try
             {
-                connection.Execute(query);
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+                {
+                    connection.Execute(query);
+                }
             }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool DeleteJunctionsByBroker(int brokerId)
+        {
+            string query = $"DELETE FROM dbo.CompaniesBrokers WHERE BrokerId = {brokerId};";
+
+            try
+            {
+                using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+                {
+                    connection.Execute(query);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

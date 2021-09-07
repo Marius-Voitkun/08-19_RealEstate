@@ -47,12 +47,13 @@ else
                 <th class="text-center align-middle">Apartment Address</th>
                 <th class="text-center align-middle">Company</th>
                 <th class="text-center align-middle">Broker</th>
+                <th class="text-center align-middle"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var apartment in Model.Apartments)
             {
-                <tr>
+                <tr id="tr-@apartment.Id">
                     <td class="text-center align-middle">
                         @Html.ActionLink(
                                         apartment.Address.ToString(),
@@ -74,8 +75,36 @@ else
                                         "Apartments",
                                         new { brokerId = apartment.Broker.Id, brokerName = apartment.Broker.ToString() })
                     </td>
+                    <td class="text-center align-middle">
+                        <button id="delete-@apartment.Id-@apartment.AddressId" class="btn btn-danger js-delete">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#apartments .js-delete").on("click", function () {
+                let apartmentId = this.id.split('-')[1];
+                let addressId = this.id.split('-')[2];
+
+                if (confirm("Are you sure you want to delete this apartment?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: 'Apartments/Delete',
+                        data: {
+                            apartmentId: apartmentId,
+                            addressId: addressId
+                        }
+                    });
+
+                    document.getElementById(`tr-${apartmentId}`).innerHTML = '';
+                }
+            });
+        });
+    </script>
 }

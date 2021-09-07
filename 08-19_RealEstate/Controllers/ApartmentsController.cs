@@ -2,10 +2,6 @@
 using _08_19_RealEstate.Services;
 using _08_19_RealEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.Controllers
 {
@@ -57,6 +53,13 @@ namespace _08_19_RealEstate.Controllers
         public IActionResult Edit(Apartment apartment)
         {
             _dbService.UpdateApartment(apartment);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int apartmentId, int addressId)
+        {
+            _dbService.DeleteApartment(apartmentId, addressId);
 
             return RedirectToAction("Index");
         }
