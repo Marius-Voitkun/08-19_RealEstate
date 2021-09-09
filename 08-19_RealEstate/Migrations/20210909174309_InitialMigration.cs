@@ -12,8 +12,8 @@ namespace _08_19_RealEstate.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    City = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     HouseNr = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     FlatNr = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true)
                 },
@@ -28,8 +28,8 @@ namespace _08_19_RealEstate.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +53,7 @@ namespace _08_19_RealEstate.Migrations
                         column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,7 +65,7 @@ namespace _08_19_RealEstate.Migrations
                     AddressId = table.Column<int>(type: "int", nullable: false),
                     Floor = table.Column<int>(type: "int", nullable: false),
                     TotalFloorsInBuilding = table.Column<int>(type: "int", nullable: false),
-                    AreaInSqm = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    AreaInSqm = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false),
                     BrokerId = table.Column<int>(type: "int", nullable: false),
                     CompanyId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -77,43 +77,43 @@ namespace _08_19_RealEstate.Migrations
                         column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Apartments_Brokers_BrokerId",
                         column: x => x.BrokerId,
                         principalTable: "Brokers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Apartments_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BrokerCompany",
+                name: "CompaniesBrokers",
                 columns: table => new
                 {
-                    BrokersId = table.Column<int>(type: "int", nullable: false),
-                    CompaniesId = table.Column<int>(type: "int", nullable: false)
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    BrokerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BrokerCompany", x => new { x.BrokersId, x.CompaniesId });
+                    table.PrimaryKey("PK_CompaniesBrokers", x => new { x.BrokerId, x.CompanyId });
                     table.ForeignKey(
-                        name: "FK_BrokerCompany_Brokers_BrokersId",
-                        column: x => x.BrokersId,
+                        name: "FK_CompaniesBrokers_Brokers_BrokerId",
+                        column: x => x.BrokerId,
                         principalTable: "Brokers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_BrokerCompany_Companies_CompaniesId",
-                        column: x => x.CompaniesId,
+                        name: "FK_CompaniesBrokers_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -132,14 +132,14 @@ namespace _08_19_RealEstate.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BrokerCompany_CompaniesId",
-                table: "BrokerCompany",
-                column: "CompaniesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Companies_AddressId",
                 table: "Companies",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompaniesBrokers_CompanyId",
+                table: "CompaniesBrokers",
+                column: "CompanyId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -148,7 +148,7 @@ namespace _08_19_RealEstate.Migrations
                 name: "Apartments");
 
             migrationBuilder.DropTable(
-                name: "BrokerCompany");
+                name: "CompaniesBrokers");
 
             migrationBuilder.DropTable(
                 name: "Brokers");

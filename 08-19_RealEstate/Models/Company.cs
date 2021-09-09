@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.Models
 {
@@ -20,5 +17,7 @@ namespace _08_19_RealEstate.Models
         public Address Address { get; set; }
 
         public List<Broker> Brokers { get; set; }
+
+        public List<Apartment> Apartments { get; set; }
     }
 }

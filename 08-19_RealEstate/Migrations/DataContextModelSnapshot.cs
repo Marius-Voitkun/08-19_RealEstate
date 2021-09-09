@@ -7,8 +7,8 @@ using _08_19_RealEstate.Data;
 
 namespace _08_19_RealEstate.Migrations
 {
-    [DbContext(typeof(RealEstateDbContext))]
-    partial class RealEstateDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DataContext))]
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -17,21 +17,6 @@ namespace _08_19_RealEstate.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BrokerCompany", b =>
-                {
-                    b.Property<int>("BrokersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompaniesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BrokersId", "CompaniesId");
-
-                    b.HasIndex("CompaniesId");
-
-                    b.ToTable("BrokerCompany");
-                });
 
             modelBuilder.Entity("_08_19_RealEstate.Models.Address", b =>
                 {
@@ -42,8 +27,8 @@ namespace _08_19_RealEstate.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("FlatNr")
                         .HasMaxLength(5)
@@ -56,8 +41,8 @@ namespace _08_19_RealEstate.Migrations
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -75,7 +60,8 @@ namespace _08_19_RealEstate.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AreaInSqm")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal(10,3)");
 
                     b.Property<int>("BrokerId")
                         .HasColumnType("int");
@@ -109,13 +95,13 @@ namespace _08_19_RealEstate.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -144,19 +130,19 @@ namespace _08_19_RealEstate.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("BrokerCompany", b =>
+            modelBuilder.Entity("_08_19_RealEstate.Models.CompanyBrokerJunction", b =>
                 {
-                    b.HasOne("_08_19_RealEstate.Models.Broker", null)
-                        .WithMany()
-                        .HasForeignKey("BrokersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("BrokerId")
+                        .HasColumnType("int");
 
-                    b.HasOne("_08_19_RealEstate.Models.Company", null)
-                        .WithMany()
-                        .HasForeignKey("CompaniesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BrokerId", "CompanyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("CompaniesBrokers");
                 });
 
             modelBuilder.Entity("_08_19_RealEstate.Models.Apartment", b =>
@@ -168,15 +154,15 @@ namespace _08_19_RealEstate.Migrations
                         .IsRequired();
 
                     b.HasOne("_08_19_RealEstate.Models.Broker", "Broker")
-                        .WithMany()
+                        .WithMany("Apartments")
                         .HasForeignKey("BrokerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("_08_19_RealEstate.Models.Company", "Company")
-                        .WithMany()
+                        .WithMany("Apartments")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -195,6 +181,35 @@ namespace _08_19_RealEstate.Migrations
                         .IsRequired();
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("_08_19_RealEstate.Models.CompanyBrokerJunction", b =>
+                {
+                    b.HasOne("_08_19_RealEstate.Models.Broker", "Broker")
+                        .WithMany()
+                        .HasForeignKey("BrokerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("_08_19_RealEstate.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Broker");
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("_08_19_RealEstate.Models.Broker", b =>
+                {
+                    b.Navigation("Apartments");
+                });
+
+            modelBuilder.Entity("_08_19_RealEstate.Models.Company", b =>
+                {
+                    b.Navigation("Apartments");
                 });
 #pragma warning restore 612, 618
         }

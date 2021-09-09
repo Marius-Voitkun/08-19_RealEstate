@@ -7,18 +7,18 @@ namespace _08_19_RealEstate.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(40)]
+        [StringLength(50)]
         public string City { get; set; }
 
         [Required]
-        [StringLength(40)]
+        [StringLength(50)]
         public string Street { get; set; }
 
         [Required]
         [StringLength(7)]
         public string HouseNr { get; set; }
 
-        [DisplayFormat(ConvertEmptyStringToNull = true)]  // does not work?
+        [DisplayFormat(ConvertEmptyStringToNull = true)]
         [StringLength(5)]
         public string FlatNr { get; set; }
 

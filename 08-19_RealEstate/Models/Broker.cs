@@ -8,14 +8,16 @@ namespace _08_19_RealEstate.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(30)]
+        [StringLength(50)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(30)]
+        [StringLength(50)]
         public string LastName { get; set; }
 
         public List<Company> Companies { get; set; }
+
+        public List<Apartment> Apartments { get; set; }
 
         public override string ToString()
         {

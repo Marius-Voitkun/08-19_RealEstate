@@ -2,16 +2,10 @@ using _08_19_RealEstate.Data;
 using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate
 {
@@ -29,7 +23,7 @@ namespace _08_19_RealEstate
         {
             services.AddControllersWithViews();
             //services.AddScoped<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
-            services.AddDbContext<RealEstateDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:EF"]));
+            services.AddDbContext<DataContext>(c => c.UseSqlServer(Configuration.GetConnectionString("EF")));
             services.AddScoped<GeneralService>();
             services.AddScoped<ApartmentsDbService>();
             services.AddScoped<BrokersDbService>();
