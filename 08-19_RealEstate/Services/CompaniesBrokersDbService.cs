@@ -1,5 +1,5 @@
-﻿using _08_19_RealEstate.Models;
-using _08_19_RealEstate.ViewModels;
+﻿using _08_19_RealEstate.Data;
+using _08_19_RealEstate.Models;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,10 +11,12 @@ namespace _08_19_RealEstate.Services
 {
     public class CompaniesBrokersDbService
     {
+        private DataContext _context;
         private readonly IConfiguration _configuration;
 
-        public CompaniesBrokersDbService(IConfiguration configuration)
+        public CompaniesBrokersDbService(DataContext context, IConfiguration configuration)
         {
+            _context = context;
             _configuration = configuration;
         }
 

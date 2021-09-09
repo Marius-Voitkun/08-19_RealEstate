@@ -81,7 +81,7 @@ namespace _08_19_RealEstate.Services
                 CompaniesBrokersJson = JsonConvert.SerializeObject(_companiesBrokersDbService.GetJunctions())
             };
 
-            model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
+            //model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
 
             return model;
         }

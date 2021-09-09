@@ -1,133 +1,61 @@
-﻿using _08_19_RealEstate.Models;
-using _08_19_RealEstate.ViewModels;
-using Dapper;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using _08_19_RealEstate.Data;
+using _08_19_RealEstate.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.Services
 {
     public class ApartmentsDbService
     {
-        private readonly AddressesDbService _addressesDbService;
-        private readonly BrokersDbService _brokersDbService;
-        private readonly CompaniesDbService _companiesDbService;
-        private readonly IConfiguration _configuration;
+        private DataContext _context;
 
-        public ApartmentsDbService(AddressesDbService addressesDbService, BrokersDbService brokersDbService,
-                    CompaniesDbService companiesDbService, IConfiguration configuration)
+        public ApartmentsDbService(DataContext context)
         {
-            _addressesDbService = addressesDbService;
-            _brokersDbService = brokersDbService;
-            _companiesDbService = companiesDbService;
-            _configuration = configuration;
+            _context = context;
         }
 
         public List<Apartment> GetApartments(ApartmentsFilterModel filterModel)
         {
-            List<Apartment> apartments = new();
+            List<Apartment> apartments = _context.Apartments
+                                                    .Include(a => a.Address)
+                                                    .Include(a => a.Broker)
+                                                    .Include(a => a.Company)
+                                                    .ToList();
 
-            string query = GenerateQueryToGetFilteredApartments(filterModel);
+            if (filterModel.ApartmentId != null && filterModel.ApartmentId != 0)
+                apartments = apartments.Where(a => a.Id == filterModel.ApartmentId).ToList();
 
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                apartments = connection.Query<Apartment>(query).ToList();
-            }
+            if (filterModel.CompanyId != null && filterModel.CompanyId != 0)
+                apartments = apartments.Where(a => a.CompanyId == filterModel.CompanyId).ToList();
 
-            List<Address> addresses = _addressesDbService.GetAddresses();
-            List<Broker> brokers = _brokersDbService.GetBrokers();
-            List<Company> companies = _companiesDbService.GetCompanies();
+            if (filterModel.BrokerId != null && filterModel.BrokerId != 0)
+                apartments = apartments.Where(a => a.BrokerId == filterModel.BrokerId).ToList();
 
-            foreach (var apartment in apartments)
-            {
-                apartment.Address = addresses.Single(a => a.Id == apartment.AddressId);
-                apartment.Broker = brokers.Single(b => b.Id == apartment.BrokerId);
-                apartment.Company = companies.Single(c => c.Id == apartment.CompanyId);
-            }
+            if (!string.IsNullOrWhiteSpace(filterModel.City))
+                apartments = apartments.Where(a => a.Address.City == filterModel.City).ToList();
 
             return apartments;
         }
 
-        private string GenerateQueryToGetFilteredApartments(ApartmentsFilterModel filterModel)
-        {
-            string fragmentForApartmentId = filterModel.ApartmentId != null
-                                                ? $"ap.Id = {filterModel.ApartmentId}"
-                                                : null;
-
-            string fragmentForCity = filterModel.City != null
-                                                ? $"City = N'{filterModel.City}'"
-                                                : null;
-
-            string fragmentForCompany = filterModel.CompanyId != null
-                                                ? $"CompanyId = {filterModel.CompanyId}"
-                                                : null;
-
-            string fragmentForBroker = filterModel.BrokerId != null
-                                                ? $"BrokerId = {filterModel.BrokerId}"
-                                                : null;
-
-            List<string> fragments = new() { fragmentForApartmentId, fragmentForCity, fragmentForCompany, fragmentForBroker };
-            
-            string joinedFragments = string.Join(" AND ", fragments.Where(f => !string.IsNullOrWhiteSpace(f)));
-
-            string whereClause = !string.IsNullOrWhiteSpace(joinedFragments)
-                                                ? "WHERE " + joinedFragments
-                                                : "";
-
-            string query = @$"SELECT ap.Id, ap.AddressId, ap.Floor, ap.TotalFloorsInBuilding, ap.AreaInSqm, ap.BrokerId, ap.CompanyId
-                              FROM dbo.Apartments ap
-                              LEFT JOIN dbo.Addresses ad ON ad.Id = ap.AddressId
-                              {whereClause};";
-
-            return query;
-        }
-
         public void AddApartment(Apartment apartment)
         {
-            int addressId = _addressesDbService.AddAddressAndGetItsId(apartment.Address);
-
-            string query = $@"INSERT INTO dbo.Apartments (AddressId, Floor, TotalFloorsInBuilding, AreaInSqm, BrokerId, CompanyId)
-                              VALUES ({addressId}, {apartment.Floor}, {apartment.TotalFloorsInBuilding},
-                                    {apartment.AreaInSqm}, {apartment.BrokerId}, {apartment.CompanyId});";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
+            _context.Apartments.Add(apartment);
+            _context.SaveChanges();
         }
 
         public void UpdateApartment(Apartment apartment)
         {
-            _addressesDbService.UpdateAddress(apartment.Address);
-
-            string query = $@"UPDATE dbo.Apartments
-                              SET
-                                    Floor = {apartment.Floor},
-                                    TotalFloorsInBuilding = {apartment.TotalFloorsInBuilding},
-                                    AreaInSqm = {apartment.AreaInSqm},
-                                    BrokerId = {apartment.BrokerId},
-                                    CompanyId = {apartment.CompanyId}
-                              WHERE Id = {apartment.Id};";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
+            _context.Apartments.Update(apartment);
+            _context.SaveChanges();
         }
 
         public void DeleteApartment(int apartmentId, int addressId)
         {
-            string query = $"DELETE FROM dbo.Apartments WHERE Id = {apartmentId};";
+            Apartment apartment = _context.Apartments.Single(a => a.Id == apartmentId);
 
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
-
-            _addressesDbService.DeleteAddress(addressId);
+            _context.Apartments.Remove(apartment);
+            _context.SaveChanges();
         }
     }
 }

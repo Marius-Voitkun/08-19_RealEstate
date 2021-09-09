@@ -1,74 +1,47 @@
-﻿using _08_19_RealEstate.Models;
-using Dapper;
-using Microsoft.Extensions.Configuration;
+﻿using _08_19_RealEstate.Data;
+using _08_19_RealEstate.Models;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
     public class BrokersDbService
     {
-        private readonly IConfiguration _configuration;
+        private DataContext _context;
 
-        public BrokersDbService(IConfiguration configuration)
+        public BrokersDbService(DataContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
 
         public List<Broker> GetBrokers(List<int> brokersIds = null)
         {
-            List<Broker> brokers = new();
-            string queryFragmentToFilterByIds = "";
-            
             if (brokersIds != null && brokersIds.Count != 0)
             {
-                string brokersIdsJoined = string.Join(", ", brokersIds);
-                queryFragmentToFilterByIds = $"WHERE Id IN ({brokersIdsJoined})";
+                return _context.Brokers.Where(b => brokersIds.Contains(b.Id)).ToList();
             }
 
-            string query = @$"SELECT * FROM dbo.Brokers
-                              {queryFragmentToFilterByIds};";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                brokers = connection.Query<Broker>(query).ToList();
-            }
-
-            return brokers;
+            return _context.Brokers.ToList();
         }
 
         public void AddBroker(Broker broker)
         {
-            string query = @$"INSERT INTO dbo.Brokers (FirstName, LastName)
-                              VALUES (N'{broker.FirstName}', N'{broker.LastName}');";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
+            _context.Brokers.Add(broker);
+            _context.SaveChanges();
         }
 
         public void UpdateBroker(Broker broker)
         {
-            string query = @$"UPDATE dbo.Brokers
-                              SET FirstName = N'{broker.FirstName}', LastName = N'{broker.LastName}'
-                              WHERE Id = {broker.Id};";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
+            _context.Brokers.Update(broker);
+            _context.SaveChanges();
         }
 
         public void DeleteBroker(int id)
         {
-            string query = $"DELETE FROM dbo.Brokers WHERE Id = {id};";
+            Broker broker = _context.Brokers.Single(b => b.Id == id);
 
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                connection.Execute(query);
-            }
+            _context.Brokers.Remove(broker);
+            _context.SaveChanges();
         }
     }
 }
