@@ -1,5 +1,6 @@
-﻿using _08_19_RealEstate.Data;
+﻿using _08_19_RealEstate.DAL;
 using _08_19_RealEstate.Models;
+using _08_19_RealEstate.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +21,19 @@ namespace _08_19_RealEstate.Services
             return _context.Companies.Include(c => c.Address).Include(c => c.Brokers).ToList();
         }
 
-        public int AddCompanyAndGetId(Company company)
+        public int AddCompanyAndGetId(CompanyFormViewModel model)
         {
-            _context.Companies.Add(company);
+            model.Company.Brokers = _context.Brokers.Where(b => model.SelectedBrokersIds.Contains(b.Id)).ToList();
+            _context.Companies.Add(model.Company);
             _context.SaveChanges();
 
-            return company.Id;
+            return model.Company.Id;
         }
 
-        public void UpdateCompany(Company company)
+        public void UpdateCompany(CompanyFormViewModel model)
         {
-            //_addressesDbService.UpdateAddress(company.Address);
-
-            _context.Companies.Update(company);
+            model.Company.Brokers = _context.Brokers.Where(b => model.SelectedBrokersIds.Contains(b.Id)).ToList();
+            _context.Companies.Update(model.Company);
             _context.SaveChanges();
         }
 

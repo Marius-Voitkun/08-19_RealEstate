@@ -1,4 +1,4 @@
-using _08_19_RealEstate.Data;
+using _08_19_RealEstate.DAL;
 using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,8 +22,8 @@ namespace _08_19_RealEstate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            //services.AddScoped<SqlConnection>(_ => new SqlConnection(Configuration["ConnectionStrings:Default"]));
             services.AddDbContext<DataContext>(c => c.UseSqlServer(Configuration.GetConnectionString("EF")));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<GeneralService>();
             services.AddScoped<ApartmentsDbService>();
             services.AddScoped<BrokersDbService>();

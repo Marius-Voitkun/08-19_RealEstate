@@ -1,4 +1,5 @@
-﻿using _08_19_RealEstate.Models;
+﻿using _08_19_RealEstate.DAL;
+using _08_19_RealEstate.Models;
 using _08_19_RealEstate.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -9,15 +10,17 @@ namespace _08_19_RealEstate.Services
 {
     public class GeneralService
     {
+        private DataContext _context;
         private readonly ApartmentsDbService _apartmentsDbService;
         private readonly BrokersDbService _brokersDbService;
         private readonly CompaniesDbService _companiesDbService;
         private readonly AddressesDbService _addressesDbService;
         private readonly CompaniesBrokersDbService _companiesBrokersDbService;
 
-        public GeneralService(ApartmentsDbService apartmentsDbService, BrokersDbService brokersDbService, CompaniesDbService companiesDbService,
+        public GeneralService(DataContext context, ApartmentsDbService apartmentsDbService, BrokersDbService brokersDbService, CompaniesDbService companiesDbService,
                     AddressesDbService addressesDbService, CompaniesBrokersDbService companiesBrokersDbService)
         {
+            _context = context;
             _apartmentsDbService = apartmentsDbService;
             _brokersDbService = brokersDbService;
             _companiesDbService = companiesDbService;
@@ -81,7 +84,7 @@ namespace _08_19_RealEstate.Services
                 CompaniesBrokersJson = JsonConvert.SerializeObject(_companiesBrokersDbService.GetJunctions())
             };
 
-            //model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
+            model.BrokersJson = JsonConvert.SerializeObject(model.Brokers);
 
             return model;
         }
@@ -107,16 +110,16 @@ namespace _08_19_RealEstate.Services
 
         public void AddNewCompanyWithItsBrokers(CompanyFormViewModel model)
         {
-            int companyId = _companiesDbService.AddCompanyAndGetId(model.Company);
-            _companiesBrokersDbService.AddJunctions(companyId, model.SelectedBrokersIds);
+            int companyId = _companiesDbService.AddCompanyAndGetId(model);
+            //_companiesBrokersDbService.AddJunctions(companyId, model.SelectedBrokersIds);
         }
 
         public void UpdateCompanyWithItsBrokers(CompanyFormViewModel model)
         {
-            _companiesDbService.UpdateCompany(model.Company);
+            _companiesDbService.UpdateCompany(model);
 
-            _companiesBrokersDbService.DeleteJunctionsByCompany(model.Company.Id);
-            _companiesBrokersDbService.AddJunctions(model.Company.Id, model.SelectedBrokersIds);
+            //_companiesBrokersDbService.DeleteJunctionsByCompany(model.Company.Id);
+            //_companiesBrokersDbService.AddJunctions(model.Company.Id, model.SelectedBrokersIds);
         }
 
         public List<Broker> GetBrokersInCompany(int companyId)
@@ -131,7 +134,7 @@ namespace _08_19_RealEstate.Services
         {
             try
             {
-                _companiesBrokersDbService.DeleteJunctionsByBroker(id);
+                //_companiesBrokersDbService.DeleteJunctionsByBroker(id);
                 _brokersDbService.DeleteBroker(id);
             }
             catch (Exception)
@@ -146,7 +149,7 @@ namespace _08_19_RealEstate.Services
         {
             try
             {
-                _companiesBrokersDbService.DeleteJunctionsByCompany(companyId);
+                //_companiesBrokersDbService.DeleteJunctionsByCompany(companyId);
                 _companiesDbService.DeleteCompany(companyId);
                 _addressesDbService.DeleteAddress(addressId);
             }

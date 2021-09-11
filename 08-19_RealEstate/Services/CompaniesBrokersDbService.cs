@@ -1,6 +1,7 @@
-﻿using _08_19_RealEstate.Data;
+﻿using _08_19_RealEstate.DAL;
 using _08_19_RealEstate.Models;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -22,13 +23,20 @@ namespace _08_19_RealEstate.Services
 
         public List<CompanyBrokerJunction> GetJunctions()
         {
+            List<Company> companies = _context.Companies.Include(c => c.Brokers).ToList();
+
             List<CompanyBrokerJunction> companiesBrokers = new();
 
-            string query = "SELECT * FROM dbo.CompaniesBrokers";
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
+            foreach (var company in companies)
             {
-                companiesBrokers = connection.Query<CompanyBrokerJunction>(query).ToList();
+                foreach (var broker in company.Brokers)
+                {
+                    companiesBrokers.Add(new CompanyBrokerJunction
+                    {
+                        CompanyId = company.Id,
+                        BrokerId = broker.Id
+                    });
+                }
             }
 
             return companiesBrokers;
@@ -57,16 +65,7 @@ namespace _08_19_RealEstate.Services
 
         public List<int> GetBrokersIdsForCompany(int companyId)
         {
-            string query = $"SELECT BrokerId FROM dbo.CompaniesBrokers WHERE CompanyId = {companyId};";
-
-            List<int> brokersIds = new();
-
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("Default")))
-            {
-                brokersIds = connection.Query<int>(query).ToList();
-            }
-
-            return brokersIds;
+            return _context.Companies.Include(c => c.Brokers).SingleOrDefault(c => c.Id == companyId).Brokers.Select(b => b.Id).ToList();
         }
 
         public bool DeleteJunctionsByCompany(int companyId)

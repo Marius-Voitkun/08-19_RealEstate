@@ -1,7 +1,7 @@
 ﻿using _08_19_RealEstate.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace _08_19_RealEstate.Data
+namespace _08_19_RealEstate.DAL
 {
     public class DataContext : DbContext
     {

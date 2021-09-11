@@ -1,11 +1,6 @@
-﻿using _08_19_RealEstate.Models;
-using _08_19_RealEstate.Services;
+﻿using _08_19_RealEstate.Services;
 using _08_19_RealEstate.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace _08_19_RealEstate.Controllers
 {

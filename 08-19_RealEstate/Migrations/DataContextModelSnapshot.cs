@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using _08_19_RealEstate.Data;
+using _08_19_RealEstate.DAL;
 
 namespace _08_19_RealEstate.Migrations
 {
