@@ -1,19 +1,16 @@
 ﻿using _08_19_RealEstate.Models;
 using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace _08_19_RealEstate.Controllers
 {
     public class BrokersController : Controller
     {
         private BrokersService _brokersService;
-        private GeneralService _generalService;
 
-        public BrokersController(BrokersService dbService, GeneralService generalService)
+        public BrokersController(BrokersService brokersService)
         {
-            _brokersService = dbService;
-            _generalService = generalService;
+            _brokersService = brokersService;
         }
 
         public IActionResult Index()
@@ -57,11 +54,9 @@ namespace _08_19_RealEstate.Controllers
 
         public IActionResult BrokersInCompany(int companyId, string companyName)
         {
-            List<Broker> brokers = _generalService.GetBrokersInCompany(companyId);
-
             ViewData["CompanyName"] = companyName;
 
-            return View(brokers);
+            return View(_brokersService.GetBrokersInCompany(companyId));
         }
     }
 }

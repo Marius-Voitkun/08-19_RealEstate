@@ -1,6 +1,5 @@
 ﻿using _08_19_RealEstate.DAL;
 using _08_19_RealEstate.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,20 +7,16 @@ namespace _08_19_RealEstate.Services
 {
     public class ApartmentsService
     {
-        private DataContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ApartmentsService(DataContext context)
+        public ApartmentsService(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public List<Apartment> GetApartments(ApartmentsFilterModel filterModel)
+        public List<Apartment> GetAllOrFiltered(ApartmentsFilterModel filterModel)
         {
-            List<Apartment> apartments = _context.Apartments
-                                                    .Include(a => a.Address)
-                                                    .Include(a => a.Broker)
-                                                    .Include(a => a.Company)
-                                                    .ToList();
+            List<Apartment> apartments = _unitOfWork.Apartments.GetAll().ToList();
 
             if (filterModel.ApartmentId != null && filterModel.ApartmentId != 0)
                 apartments = apartments.Where(a => a.Id == filterModel.ApartmentId).ToList();
@@ -38,24 +33,28 @@ namespace _08_19_RealEstate.Services
             return apartments;
         }
 
-        public void AddApartment(Apartment apartment)
+        public Apartment Get(int id)
         {
-            _context.Apartments.Add(apartment);
-            _context.SaveChanges();
+            return _unitOfWork.Apartments.Get(id);
         }
 
-        public void UpdateApartment(Apartment apartment)
+        public void Add(Apartment apartment)
         {
-            _context.Apartments.Update(apartment);
-            _context.SaveChanges();
+            _unitOfWork.Apartments.Add(apartment);
+            _unitOfWork.Save();
         }
 
-        public void DeleteApartment(int apartmentId, int addressId)
+        public void Update(Apartment apartment)
         {
-            Apartment apartment = _context.Apartments.Single(a => a.Id == apartmentId);
+            _unitOfWork.Apartments.Update(apartment);
+            _unitOfWork.Save();
+        }
 
-            _context.Apartments.Remove(apartment);
-            _context.SaveChanges();
+        public void Delete(int apartmentId, int addressId)
+        {
+            _unitOfWork.Apartments.Delete(apartmentId);
+            _unitOfWork.Addresses.Delete(addressId);
+            _unitOfWork.Save();
         }
     }
 }

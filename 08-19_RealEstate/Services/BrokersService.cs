@@ -30,6 +30,14 @@ namespace _08_19_RealEstate.Services
             return _unitOfWork.Brokers.Get(id);
         }
 
+        public List<Broker> GetBrokersInCompany(int companyId)
+        {
+            return _unitOfWork.Brokers.Find(b => b.Companies
+                                                    .Select(c => c.Id)
+                                                    .Contains(companyId))
+                                                .ToList();
+        }
+
         public void Add(Broker broker)
         {
             _unitOfWork.Brokers.Add(broker);

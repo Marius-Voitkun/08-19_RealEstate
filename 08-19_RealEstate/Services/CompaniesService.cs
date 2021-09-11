@@ -42,11 +42,12 @@ namespace _08_19_RealEstate.Services
             _unitOfWork.Save();
         }
 
-        public bool Delete(int id)
+        public bool Delete(int companyId, int addressId)
         {
             try
             {
-                _unitOfWork.Companies.Delete(id);
+                _unitOfWork.Companies.Delete(companyId);
+                _unitOfWork.Addresses.Delete(addressId);
                 _unitOfWork.Save();
             }
             catch (Exception)

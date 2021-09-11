@@ -40,12 +40,12 @@ namespace _08_19_RealEstate.DAL
                         .HasOne(cb => cb.Broker)    // Not Company - the order matters!!!
                         .WithMany()
                         .HasForeignKey(cb => cb.BrokerId)
-                        .OnDelete(DeleteBehavior.Restrict),
+                        .OnDelete(DeleteBehavior.Cascade),
                     j => j
                         .HasOne(cb => cb.Company)
                         .WithMany()
                         .HasForeignKey(cb => cb.CompanyId)
-                        .OnDelete(DeleteBehavior.Restrict));
+                        .OnDelete(DeleteBehavior.Cascade));
         }
     }
 }

@@ -28,8 +28,6 @@ namespace _08_19_RealEstate
             services.AddScoped<ApartmentsService>();
             services.AddScoped<BrokersService>();
             services.AddScoped<CompaniesService>();
-            services.AddScoped<AddressesService>();
-            services.AddScoped<CompaniesBrokersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,9 +9,9 @@ namespace _08_19_RealEstate.Controllers
         private CompaniesService _companiesService;
         private GeneralService _generalService;
 
-        public CompaniesController(CompaniesService dbService, GeneralService generalService)
+        public CompaniesController(CompaniesService companiesService, GeneralService generalService)
         {
-            _companiesService = dbService;
+            _companiesService = companiesService;
             _generalService = generalService;
         }
 
@@ -52,7 +52,7 @@ namespace _08_19_RealEstate.Controllers
 
         public IActionResult Delete(int companyId, int addressId)
         {
-            if (!_companiesService.Delete(companyId))
+            if (!_companiesService.Delete(companyId, addressId))
                 return Json("The company could not be deleted.");
 
             return Json(null);

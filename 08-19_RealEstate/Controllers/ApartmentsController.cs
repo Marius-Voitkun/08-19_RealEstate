@@ -7,12 +7,12 @@ namespace _08_19_RealEstate.Controllers
 {
     public class ApartmentsController : Controller
     {
-        private ApartmentsService _dbService;
+        private ApartmentsService _apartmentsService;
         private GeneralService _generalService;
 
-        public ApartmentsController(ApartmentsService dbService, GeneralService generalService)
+        public ApartmentsController(ApartmentsService apartmentsService, GeneralService generalService)
         {
-            _dbService = dbService;
+            _apartmentsService = apartmentsService;
             _generalService = generalService;
         }
 
@@ -26,9 +26,7 @@ namespace _08_19_RealEstate.Controllers
 
         public IActionResult Details(int id)
         {
-            Apartment apartment = _dbService.GetApartments(new ApartmentsFilterModel { ApartmentId = id })[0];
-
-            return View(apartment);
+            return View(_apartmentsService.Get(id));
         }
 
         public IActionResult Create()
@@ -39,7 +37,7 @@ namespace _08_19_RealEstate.Controllers
         [HttpPost]
         public IActionResult Create(Apartment apartment)
         {
-            _dbService.AddApartment(apartment);
+            _apartmentsService.Add(apartment);
 
             return RedirectToAction("Index");
         }
@@ -52,14 +50,14 @@ namespace _08_19_RealEstate.Controllers
         [HttpPost]
         public IActionResult Edit(Apartment apartment)
         {
-            _dbService.UpdateApartment(apartment);
+            _apartmentsService.Update(apartment);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int apartmentId, int addressId)
         {
-            _dbService.DeleteApartment(apartmentId, addressId);
+            _apartmentsService.Delete(apartmentId, addressId);
 
             return RedirectToAction("Index");
         }
