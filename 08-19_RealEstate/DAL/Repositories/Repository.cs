@@ -17,52 +17,55 @@ namespace _08_19_RealEstate.DAL.Repositories
             _dbSet = context.Set<TEntity>();
         }
 
-        public TEntity Get(int id)
+        public virtual TEntity Get(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
             return _dbSet.ToList();
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.Where(predicate);
         }
 
-        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.SingleOrDefault(predicate);
         }
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             _dbSet.Add(entity);
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public virtual void AddRange(IEnumerable<TEntity> entities)
         {
             _dbSet.AddRange(entities);
         }
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
+            //_dbSet.Attach(entity);
+            //Context.Entry(entity).State = EntityState.Modified;
+
             _dbSet.Update(entity);      // check later!!!
         }
 
-        public void Remove(int id)
+        public virtual void Delete(int id)
         {
-            Remove(Get(id));
+            Delete(Get(id));
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public virtual void DeleteRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
         }

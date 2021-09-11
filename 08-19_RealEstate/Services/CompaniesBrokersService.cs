@@ -10,12 +10,12 @@ using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
-    public class CompaniesBrokersDbService
+    public class CompaniesBrokersService
     {
         private DataContext _context;
         private readonly IConfiguration _configuration;
 
-        public CompaniesBrokersDbService(DataContext context, IConfiguration configuration)
+        public CompaniesBrokersService(DataContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;

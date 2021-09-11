@@ -2,24 +2,23 @@
 using _08_19_RealEstate.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace _08_19_RealEstate.Controllers
 {
     public class BrokersController : Controller
     {
-        private BrokersDbService _dbService;
+        private BrokersService _brokersService;
         private GeneralService _generalService;
 
-        public BrokersController(BrokersDbService dbService, GeneralService generalService)
+        public BrokersController(BrokersService dbService, GeneralService generalService)
         {
-            _dbService = dbService;
+            _brokersService = dbService;
             _generalService = generalService;
         }
 
         public IActionResult Index()
         {
-            return View(_dbService.GetBrokers());
+            return View(_brokersService.GetAll());
         }
 
         public IActionResult Create()
@@ -28,34 +27,29 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Broker newBroker)
+        public IActionResult Create(Broker broker)
         {
-            _dbService.AddBroker(newBroker);
+            _brokersService.Add(broker);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Edit(int id)
         {
-            Broker broker = _dbService.GetBrokers().SingleOrDefault(b => b.Id == id);
-
-            if (broker == null)
-                return NotFound();
-
-            return View(broker);
+            return View(_brokersService.Get(id));
         }
 
         [HttpPost]
         public IActionResult Edit(Broker broker)
         {
-            _dbService.UpdateBroker(broker);
+            _brokersService.Update(broker);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)
         {
-            if (!_generalService.DeleteBroker(id))
+            if (!_brokersService.Delete(id))
                 return Json("The broker could not be deleted.");
 
             return Json(null);

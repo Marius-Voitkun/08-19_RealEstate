@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
-    public class AddressesDbService
+    public class AddressesService
     {
         private DataContext _context;
 
-        public AddressesDbService(DataContext context)
+        public AddressesService(DataContext context)
         {
             _context = context;
         }

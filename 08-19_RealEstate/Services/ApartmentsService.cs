@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
-    public class ApartmentsDbService
+    public class ApartmentsService
     {
         private DataContext _context;
 
-        public ApartmentsDbService(DataContext context)
+        public ApartmentsService(DataContext context)
         {
             _context = context;
         }

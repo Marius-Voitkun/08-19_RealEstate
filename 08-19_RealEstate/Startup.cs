@@ -25,11 +25,11 @@ namespace _08_19_RealEstate
             services.AddDbContext<DataContext>(c => c.UseSqlServer(Configuration.GetConnectionString("EF")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<GeneralService>();
-            services.AddScoped<ApartmentsDbService>();
-            services.AddScoped<BrokersDbService>();
-            services.AddScoped<CompaniesDbService>();
-            services.AddScoped<AddressesDbService>();
-            services.AddScoped<CompaniesBrokersDbService>();
+            services.AddScoped<ApartmentsService>();
+            services.AddScoped<BrokersService>();
+            services.AddScoped<CompaniesService>();
+            services.AddScoped<AddressesService>();
+            services.AddScoped<CompaniesBrokersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

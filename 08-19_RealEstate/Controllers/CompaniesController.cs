@@ -6,18 +6,18 @@ namespace _08_19_RealEstate.Controllers
 {
     public class CompaniesController : Controller
     {
-        private CompaniesDbService _dbService;
+        private CompaniesService _companiesService;
         private GeneralService _generalService;
 
-        public CompaniesController(CompaniesDbService dbService, GeneralService generalService)
+        public CompaniesController(CompaniesService dbService, GeneralService generalService)
         {
-            _dbService = dbService;
+            _companiesService = dbService;
             _generalService = generalService;
         }
 
         public IActionResult Index()
         {
-            return View(_dbService.GetCompanies());
+            return View(_companiesService.GetAll());
         }
 
         public IActionResult Create()
@@ -30,7 +30,7 @@ namespace _08_19_RealEstate.Controllers
         [HttpPost]
         public IActionResult Create(CompanyFormViewModel model)
         {
-            _generalService.AddNewCompanyWithItsBrokers(model);
+            _companiesService.AddCompanyWithBrokers(model);
 
             return RedirectToAction("Index");
         }
@@ -39,23 +39,20 @@ namespace _08_19_RealEstate.Controllers
         {
             CompanyFormViewModel model = _generalService.GetModelForEditingCompany(id);
 
-            if (model.Company == null)
-                return NotFound();
-
             return View(model);
         }
 
         [HttpPost]
         public IActionResult Edit(CompanyFormViewModel model)
         {
-            _generalService.UpdateCompanyWithItsBrokers(model);
+            _companiesService.UpdateCompanyWithBrokers(model);
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int companyId, int addressId)
         {
-            if (!_generalService.DeleteCompany(companyId, addressId))
+            if (!_companiesService.Delete(companyId))
                 return Json("The company could not be deleted.");
 
             return Json(null);

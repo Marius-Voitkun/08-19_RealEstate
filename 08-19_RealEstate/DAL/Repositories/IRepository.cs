@@ -16,8 +16,8 @@ namespace _08_19_RealEstate.DAL.Repositories
 
         void Update(TEntity entity);
 
-        void Remove(int id);
-        void Remove(TEntity entity);
-        void RemoveRange(IEnumerable<TEntity> entities);
+        void Delete(int id);
+        void Delete(TEntity entity);
+        void DeleteRange(IEnumerable<TEntity> entities);
     }
 }

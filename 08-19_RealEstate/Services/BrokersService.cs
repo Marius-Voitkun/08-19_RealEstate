@@ -1,20 +1,21 @@
 ﻿using _08_19_RealEstate.DAL;
 using _08_19_RealEstate.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace _08_19_RealEstate.Services
 {
-    public class BrokersDbService
+    public class BrokersService
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public BrokersDbService(IUnitOfWork unitOfWork)
+        public BrokersService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public List<Broker> GetBrokers(List<int> brokersIds = null)
+        public List<Broker> GetAll(List<int> brokersIds = null)
         {
             //if (brokersIds != null && brokersIds.Count != 0)
             //{
@@ -24,22 +25,36 @@ namespace _08_19_RealEstate.Services
             return _unitOfWork.Brokers.GetAll().ToList();
         }
 
-        public void AddBroker(Broker broker)
+        public Broker Get(int id)
+        {
+            return _unitOfWork.Brokers.Get(id);
+        }
+
+        public void Add(Broker broker)
         {
             _unitOfWork.Brokers.Add(broker);
             _unitOfWork.Save();
         }
 
-        public void UpdateBroker(Broker broker)
+        public void Update(Broker broker)
         {
             _unitOfWork.Brokers.Update(broker);
             _unitOfWork.Save();
         }
 
-        public void DeleteBroker(int id)
+        public bool Delete(int id)
         {
-            _unitOfWork.Brokers.Remove(id);
-            _unitOfWork.Save();
+            try
+            {
+                _unitOfWork.Brokers.Delete(id);
+                _unitOfWork.Save();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

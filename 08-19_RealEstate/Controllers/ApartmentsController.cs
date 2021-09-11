@@ -7,10 +7,10 @@ namespace _08_19_RealEstate.Controllers
 {
     public class ApartmentsController : Controller
     {
-        private ApartmentsDbService _dbService;
+        private ApartmentsService _dbService;
         private GeneralService _generalService;
 
-        public ApartmentsController(ApartmentsDbService dbService, GeneralService generalService)
+        public ApartmentsController(ApartmentsService dbService, GeneralService generalService)
         {
             _dbService = dbService;
             _generalService = generalService;
