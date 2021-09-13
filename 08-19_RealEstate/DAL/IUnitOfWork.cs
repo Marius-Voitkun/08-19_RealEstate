@@ -1,4 +1,4 @@
-﻿using _08_19_RealEstate.DAL.Repositories;
+﻿using _08_19_RealEstate.DAL.IRepositories;
 using _08_19_RealEstate.Models;
 using System;
 

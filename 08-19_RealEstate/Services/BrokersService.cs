@@ -15,13 +15,8 @@ namespace _08_19_RealEstate.Services
             _unitOfWork = unitOfWork;
         }
 
-        public List<Broker> GetAll(List<int> brokersIds = null)
+        public List<Broker> GetAll()
         {
-            //if (brokersIds != null && brokersIds.Count != 0)
-            //{
-            //    return _context.Brokers.Where(b => brokersIds.Contains(b.Id)).ToList();
-            //}
-
             return _unitOfWork.Brokers.GetAll().ToList();
         }
 

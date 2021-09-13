@@ -1,17 +1,23 @@
-﻿using _08_19_RealEstate.Models;
+﻿using _08_19_RealEstate.DAL.IRepositories;
+using _08_19_RealEstate.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace _08_19_RealEstate.DAL.Repositories
 {
     public class BrokersRepository : Repository<Broker>, IBrokersRepository
     {
+        private readonly DbSet<Broker> _dbSet;
+
         public BrokersRepository(DataContext context)
             : base(context)
         {
+            _dbSet = context.Brokers;
         }
 
-        public DataContext DataContext
+        public override IEnumerable<Broker> GetAll()
         {
-            get { return Context as DataContext; }
+            return _dbSet.Include(b => b.Companies);
         }
     }
 }

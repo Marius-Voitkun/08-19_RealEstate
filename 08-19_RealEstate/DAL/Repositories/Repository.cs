@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using _08_19_RealEstate.DAL.IRepositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace _08_19_RealEstate.DAL.Repositories
             //_dbSet.Attach(entity);
             //Context.Entry(entity).State = EntityState.Modified;
 
-            _dbSet.Update(entity);      // check later!!!
+            _dbSet.Update(entity);
         }
 
         public virtual void Delete(int id)

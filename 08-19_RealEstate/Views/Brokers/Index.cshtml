@@ -18,6 +18,7 @@ else
             <tr>
                 <th class="text-center align-middle">First Name</th>
                 <th class="text-center align-middle">Last Name</th>
+                <th class="text-center align-middle">Companies</th>
                 <th class="text-center align-middle"></th>
                 <th class="text-center align-middle"></th>
             </tr>
@@ -28,6 +29,7 @@ else
                 <tr id="tr-@broker.Id">
                     <td class="text-center align-middle">@broker.FirstName</td>
                     <td class="text-center align-middle">@broker.LastName</td>
+                    <td class="text-center align-middle">@String.Join(", ", broker.Companies.Select(c => c.Name))</td>
                     <td class="text-center align-middle">
                         @Html.ActionLink("Show apartments", "ApartmentsOfBroker", "Apartments", new { brokerId = broker.Id, brokerName = broker.ToString() })
                     </td>
