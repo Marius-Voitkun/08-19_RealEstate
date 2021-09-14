@@ -81,3 +81,14 @@ body {
 .fake-link:hover {
     text-decoration: underline;
 }
+
+.field-validation-error,
+.validation-summary-errors,
+label.error {
+    color: red;
+}
+
+.input-validation-error,
+input.error {
+    border: 2px solid red;
+}

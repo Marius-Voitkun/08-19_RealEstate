@@ -24,8 +24,12 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Broker broker)
         {
+            if (!ModelState.IsValid)
+                return View(broker);
+
             _brokersService.Add(broker);
 
             return RedirectToAction("Index");
@@ -37,8 +41,12 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Broker broker)
         {
+            if (!ModelState.IsValid)
+                return View(broker);
+
             _brokersService.Update(broker);
 
             return RedirectToAction("Index");

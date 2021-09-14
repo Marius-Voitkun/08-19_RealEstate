@@ -6,13 +6,15 @@ namespace _08_19_RealEstate.Controllers
 {
     public class CompaniesController : Controller
     {
-        private CompaniesService _companiesService;
         private GeneralService _generalService;
+        private CompaniesService _companiesService;
+        private BrokersService _brokersService;
 
-        public CompaniesController(CompaniesService companiesService, GeneralService generalService)
+        public CompaniesController(GeneralService generalService, CompaniesService companiesService, BrokersService brokersService)
         {
-            _companiesService = companiesService;
             _generalService = generalService;
+            _companiesService = companiesService;
+            _brokersService = brokersService;
         }
 
         public IActionResult Index()
@@ -28,8 +30,15 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(CompanyFormViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.Brokers = _brokersService.GetAll();
+                return View(model);
+            }
+
             _companiesService.AddCompanyWithBrokers(model);
 
             return RedirectToAction("Index");
@@ -43,8 +52,15 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(CompanyFormViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.Brokers = _brokersService.GetAll();
+                return View(model);
+            }
+
             _companiesService.UpdateCompanyWithBrokers(model);
 
             return RedirectToAction("Index");

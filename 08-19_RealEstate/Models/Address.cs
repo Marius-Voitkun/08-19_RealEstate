@@ -6,15 +6,15 @@ namespace _08_19_RealEstate.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the city.")]
         [StringLength(50)]
         public string City { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the street.")]
         [StringLength(50)]
         public string Street { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the house number.")]
         [StringLength(7)]
         public string HouseNr { get; set; }
 

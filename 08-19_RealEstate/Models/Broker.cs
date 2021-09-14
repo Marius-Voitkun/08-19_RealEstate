@@ -10,12 +10,12 @@ namespace _08_19_RealEstate.Models
         [JsonProperty]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the first name.")]
         [StringLength(50)]
         [JsonProperty]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the last name.")]
         [StringLength(50)]
         [JsonProperty]
         public string LastName { get; set; }

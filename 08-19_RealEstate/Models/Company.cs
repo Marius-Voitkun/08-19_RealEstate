@@ -7,7 +7,7 @@ namespace _08_19_RealEstate.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter the company name.")]
         [StringLength(100)]
         public string Name { get; set; }
 
