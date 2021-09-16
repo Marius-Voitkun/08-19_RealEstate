@@ -22,12 +22,18 @@ namespace _08_19_RealEstate
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<DataContext>(c => c.UseSqlServer(Configuration.GetConnectionString("EF")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<GeneralService>();
             services.AddScoped<ApartmentsService>();
             services.AddScoped<BrokersService>();
             services.AddScoped<CompaniesService>();
+
+            string dbType = Configuration.GetValue<string>("DatabaseType");
+
+            if (dbType == "SqlServer")
+                services.AddDbContext<DataContext>(o => o.UseSqlServer(Configuration.GetConnectionString("Default")));
+            if (dbType == "InMemory")
+                services.AddDbContext<DataContext>(o => o.UseInMemoryDatabase("RealEstate"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
