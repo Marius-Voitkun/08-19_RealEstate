@@ -35,8 +35,12 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Apartment apartment)
         {
+            if (!ModelState.IsValid)
+                return View(_generalService.GetModelForCreatingApartment(apartment));
+
             _apartmentsService.Add(apartment);
 
             return RedirectToAction("Index");
@@ -48,8 +52,12 @@ namespace _08_19_RealEstate.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Apartment apartment)
         {
+            if (!ModelState.IsValid)
+                return View(_generalService.GetModelForCreatingApartment(apartment));
+
             _apartmentsService.Update(apartment);
 
             return RedirectToAction("Index");

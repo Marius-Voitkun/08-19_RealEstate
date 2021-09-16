@@ -49,11 +49,13 @@ namespace _08_19_RealEstate.Services
             return model;
         }
 
-        public ApartmentFormViewModel GetModelForCreatingApartment()
+        public ApartmentFormViewModel GetModelForCreatingApartment(Apartment apartment = null)
         {
             ApartmentFormViewModel model = new()
             {
-                Apartment = new() { Address = new() },
+                Apartment = (apartment == null) ?
+                                    new() { Address = new() } :
+                                    apartment,
                 Brokers = _brokersService.GetAll(),
                 Companies = _companiesService.GetAll(),
             };
